@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heistom/authentication/presentation/pages/forgot_password.dart';
+import 'package:heistom/authentication/presentation/pages/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 16),
                   _passwordTextField(),
                   SizedBox(height: 24),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +75,9 @@ class _LoginPageState extends State<LoginPage> {
                     style: ButtonStyle(
                       padding: WidgetStateProperty.all(EdgeInsets.zero),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => RegisterPage());
+                    },
                     child: Text(
                       'Đăng ký',
                       style: TextStyle(color: Color(0xff0163E0)),
@@ -80,7 +85,9 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => ForgotPasswordPage());
+                },
                 style: ButtonStyle(
                     padding: WidgetStateProperty.all(EdgeInsets.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap),
