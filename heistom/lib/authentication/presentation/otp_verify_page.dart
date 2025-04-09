@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
-import 'package:heistom/authentication/presentation/pages/new_password.dart';
+import 'package:heistom/authentication/presentation/new_password_page.dart';
 
 class OtpVerifyPage extends StatelessWidget {
   final String email;

@@ -1,0 +1,2 @@
+/Users/linhpham/HeiStom/heistom/android/app/.cxx/Debug/5f406o60/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/linhpham/HeiStom/heistom/android/app/.cxx/Debug/5f406o60/arm64-v8a/CMakeFiles/rebuild_cache.dir
