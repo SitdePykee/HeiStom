@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heistom/common/entities/lodging.dart';
+import 'package:heistom/common/data/model/lodging.dart';
 import 'package:heistom/renter/presentation/widgets/housecard_grid.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 

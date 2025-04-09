@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:heistom/common/entities/lodging.dart';
+import 'package:heistom/common/data/model/lodging.dart';
 
 class HouseCard extends StatelessWidget {
   HouseCard({super.key, required this.lodging});
