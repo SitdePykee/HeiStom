@@ -12,6 +12,7 @@ sealed class UserModel with _$UserModel {
     String? email,
     String? phone,
     String? avatar,
+    String? address,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

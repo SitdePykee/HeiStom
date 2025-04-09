@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:heistom/common/amenities.dart';
 import 'package:heistom/common/extensions/num_extensions.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
+import 'package:heistom/owner/presentation/detail_owner_page.dart';
 import 'package:latlong2/latlong.dart';
 
 class DetailLodgingPage extends StatefulWidget {
@@ -162,21 +162,17 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
                       ],
                     ),
                     const Spacer(),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Color(0xff21C3fF), width: 1),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Xem chủ nhà',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff21C3fF)),
+                    InkWell(
+                      onTap: () => Get.to(() => DetailOwnerPage(owner: widget.lodging.owner!)),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Color(0xff21C3fF), width: 1),
+                        ),
+                        child: Center(
+                          child: Text('Xem chủ nhà', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff21C3fF)),),
                         ),
                       ),
                     )
