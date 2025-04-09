@@ -1,0 +1,2 @@
+D:/Github Clone/HeiStom/heistom/android/app/.cxx/Debug/11068i5s/x86/CMakeFiles/edit_cache.dir
+D:/Github Clone/HeiStom/heistom/android/app/.cxx/Debug/11068i5s/x86/CMakeFiles/rebuild_cache.dir
