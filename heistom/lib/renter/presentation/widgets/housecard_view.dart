@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:heistom/common/data/model/lodging.dart';
 import 'package:heistom/renter/presentation/widgets/housecard.dart';
+
+import '../../../common/domain/entity/lodging_entity.dart';
 
 class HousecardView extends StatelessWidget {
   final String title;
   final Function() onPressed;
-  final List<Lodging> houses;
+  final List<LodgingEntity> houses;
 
   const HousecardView(
       {super.key,

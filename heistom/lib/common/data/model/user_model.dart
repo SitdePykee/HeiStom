@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:heistom/common/domain/entity/user_entity.dart';
 
 part 'user_model.g.dart';
 part 'user_model.freezed.dart';
@@ -15,5 +16,17 @@ sealed class UserModel with _$UserModel {
     String? address,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
+}
+
+extension UserModelX on UserModel {
+  UserEntity toEntity() => UserEntity(
+        id: id,
+        name: name,
+        email: email,
+        phone: phone,
+        avatar: avatar,
+        address: address,
+      );
 }

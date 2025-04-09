@@ -1,29 +1,37 @@
 import 'dart:core';
 
-class Lodging {
+import 'package:heistom/common/domain/entity/user_entity.dart';
+
+class LodgingEntity {
   String? id;
   String? name;
   String? address;
   double? pricePerDay;
   double? pricePerMonth;
-  double? acreage;
-  String? image;
+  double? area;
+  List<String>? image;
   String? description;
   int? views;
   List<String>? amenities;
-  String? ownerID;
+  UserEntity? owner;
+  num? uploadDate;
+  num? lat;
+  num? lng;
 
-  Lodging({
+  LodgingEntity({
     this.id,
     this.name,
     this.address,
     this.pricePerDay,
     this.pricePerMonth,
-    this.acreage,
+    this.area,
     this.image,
     this.description,
     this.views,
     this.amenities,
-    this.ownerID,
+    this.owner,
+    this.uploadDate,
+    this.lat,
+    this.lng,
   });
 }

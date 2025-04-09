@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/amenities.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
 import 'package:heistom/common/extensions/num_extensions.dart';
-import 'package:heistom/common/data/model/lodging_model.dart';
 import 'package:heistom/owner/presentation/detail_owner_page.dart';
 import 'package:latlong2/latlong.dart';
 
 class DetailLodgingPage extends StatefulWidget {
   const DetailLodgingPage({super.key, required this.lodging});
 
-  final LodgingModel lodging;
+  final LodgingEntity lodging;
 
   @override
   State<DetailLodgingPage> createState() => _DetailLodgingPageState();
@@ -117,7 +117,8 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                _amenitiesView,
+                if (widget.lodging.amenities?.isNotEmpty ?? false)
+                  _amenitiesView,
                 const SizedBox(height: 16),
                 Text(
                   'Mô tả',
@@ -163,16 +164,25 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
                     ),
                     const Spacer(),
                     InkWell(
-                      onTap: () => Get.to(() => DetailOwnerPage(owner: widget.lodging.owner!)),
+                      onTap: () => Get.to(
+                          () => DetailOwnerPage(owner: widget.lodging.owner!)),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Color(0xff21C3fF), width: 1),
+                          border:
+                              Border.all(color: Color(0xff21C3fF), width: 1),
                         ),
                         child: Center(
-                          child: Text('Xem chủ nhà', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff21C3fF)),),
+                          child: Text(
+                            'Xem chủ nhà',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff21C3fF)),
+                          ),
                         ),
                       ),
                     )
@@ -277,6 +287,7 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: (widget.lodging.amenities ?? []).map((e) {
                 final amentity = Amenities.fromString(e);
+                if (amentity == null) return SizedBox.shrink();
                 return Row(
                   spacing: 4,
                   mainAxisAlignment: MainAxisAlignment.center,
