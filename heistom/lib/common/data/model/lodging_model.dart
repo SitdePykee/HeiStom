@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:heistom/common/data/model/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lodging_model.freezed.dart';
@@ -12,30 +13,17 @@ sealed class LodgingModel with _$LodgingModel {
     String? address,
     double? pricePerDay,
     double? pricePerMonth,
-    double? acreage,
-    String? image,
+    double? area,
+    List<String>? image,
     String? description,
     int? views,
     List<String>? amenities,
-    String? ownerID,
+    UserModel? owner,
+    num? uploadDate,
+    num? lat,
+    num? lng,
   }) = _LodgingModel;
 
   factory LodgingModel.fromJson(Map<String, dynamic> json) =>
       _$LodgingModelFromJson(json);
-}
-
-extension LodgingModelX on LodgingModel {
-  LodgingModel get toEntity => LodgingModel(
-        id: id,
-        name: name,
-        address: address,
-        pricePerDay: pricePerDay,
-        pricePerMonth: pricePerMonth,
-        acreage: acreage,
-        image: image,
-        description: description,
-        views: views,
-        amenities: amenities,
-        ownerID: ownerID,
-      );
 }
