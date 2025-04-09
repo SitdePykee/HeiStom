@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heistom/authentication/presentation/pages/forgot_password.dart';
+import 'package:heistom/authentication/presentation/forgot_password_page.dart';
 import 'package:heistom/authentication/presentation/pages/register.dart';
 
 class LoginPage extends StatefulWidget {
