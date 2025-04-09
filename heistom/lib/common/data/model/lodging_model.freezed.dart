@@ -20,12 +20,15 @@ mixin _$LodgingModel {
   String? get address;
   double? get pricePerDay;
   double? get pricePerMonth;
-  double? get acreage;
-  String? get image;
+  double? get area;
+  List<String>? get image;
   String? get description;
   int? get views;
   List<String>? get amenities;
-  String? get ownerID;
+  UserModel? get owner;
+  num? get uploadDate;
+  num? get lat;
+  num? get lng;
 
   /// Create a copy of LodgingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -50,13 +53,17 @@ mixin _$LodgingModel {
                 other.pricePerDay == pricePerDay) &&
             (identical(other.pricePerMonth, pricePerMonth) ||
                 other.pricePerMonth == pricePerMonth) &&
-            (identical(other.acreage, acreage) || other.acreage == acreage) &&
-            (identical(other.image, image) || other.image == image) &&
+            (identical(other.area, area) || other.area == area) &&
+            const DeepCollectionEquality().equals(other.image, image) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.views, views) || other.views == views) &&
             const DeepCollectionEquality().equals(other.amenities, amenities) &&
-            (identical(other.ownerID, ownerID) || other.ownerID == ownerID));
+            (identical(other.owner, owner) || other.owner == owner) &&
+            (identical(other.uploadDate, uploadDate) ||
+                other.uploadDate == uploadDate) &&
+            (identical(other.lat, lat) || other.lat == lat) &&
+            (identical(other.lng, lng) || other.lng == lng));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -68,16 +75,19 @@ mixin _$LodgingModel {
       address,
       pricePerDay,
       pricePerMonth,
-      acreage,
-      image,
+      area,
+      const DeepCollectionEquality().hash(image),
       description,
       views,
       const DeepCollectionEquality().hash(amenities),
-      ownerID);
+      owner,
+      uploadDate,
+      lat,
+      lng);
 
   @override
   String toString() {
-    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, acreage: $acreage, image: $image, description: $description, views: $views, amenities: $amenities, ownerID: $ownerID)';
+    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, area: $area, image: $image, description: $description, views: $views, amenities: $amenities, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
   }
 }
 
@@ -93,12 +103,17 @@ abstract mixin class $LodgingModelCopyWith<$Res> {
       String? address,
       double? pricePerDay,
       double? pricePerMonth,
-      double? acreage,
-      String? image,
+      double? area,
+      List<String>? image,
       String? description,
       int? views,
       List<String>? amenities,
-      String? ownerID});
+      UserModel? owner,
+      num? uploadDate,
+      num? lat,
+      num? lng});
+
+  $UserModelCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
@@ -118,12 +133,15 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
     Object? address = freezed,
     Object? pricePerDay = freezed,
     Object? pricePerMonth = freezed,
-    Object? acreage = freezed,
+    Object? area = freezed,
     Object? image = freezed,
     Object? description = freezed,
     Object? views = freezed,
     Object? amenities = freezed,
-    Object? ownerID = freezed,
+    Object? owner = freezed,
+    Object? uploadDate = freezed,
+    Object? lat = freezed,
+    Object? lng = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -146,14 +164,14 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
           ? _self.pricePerMonth
           : pricePerMonth // ignore: cast_nullable_to_non_nullable
               as double?,
-      acreage: freezed == acreage
-          ? _self.acreage
-          : acreage // ignore: cast_nullable_to_non_nullable
+      area: freezed == area
+          ? _self.area
+          : area // ignore: cast_nullable_to_non_nullable
               as double?,
       image: freezed == image
           ? _self.image
           : image // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       description: freezed == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -166,11 +184,37 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
           ? _self.amenities
           : amenities // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      ownerID: freezed == ownerID
-          ? _self.ownerID
-          : ownerID // ignore: cast_nullable_to_non_nullable
-              as String?,
+      owner: freezed == owner
+          ? _self.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
+      uploadDate: freezed == uploadDate
+          ? _self.uploadDate
+          : uploadDate // ignore: cast_nullable_to_non_nullable
+              as num?,
+      lat: freezed == lat
+          ? _self.lat
+          : lat // ignore: cast_nullable_to_non_nullable
+              as num?,
+      lng: freezed == lng
+          ? _self.lng
+          : lng // ignore: cast_nullable_to_non_nullable
+              as num?,
     ));
+  }
+
+  /// Create a copy of LodgingModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get owner {
+    if (_self.owner == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_self.owner!, (value) {
+      return _then(_self.copyWith(owner: value));
+    });
   }
 }
 
@@ -183,13 +227,17 @@ class _LodgingModel implements LodgingModel {
       this.address,
       this.pricePerDay,
       this.pricePerMonth,
-      this.acreage,
-      this.image,
+      this.area,
+      final List<String>? image,
       this.description,
       this.views,
       final List<String>? amenities,
-      this.ownerID})
-      : _amenities = amenities;
+      this.owner,
+      this.uploadDate,
+      this.lat,
+      this.lng})
+      : _image = image,
+        _amenities = amenities;
   factory _LodgingModel.fromJson(Map<String, dynamic> json) =>
       _$LodgingModelFromJson(json);
 
@@ -204,9 +252,17 @@ class _LodgingModel implements LodgingModel {
   @override
   final double? pricePerMonth;
   @override
-  final double? acreage;
+  final double? area;
+  final List<String>? _image;
   @override
-  final String? image;
+  List<String>? get image {
+    final value = _image;
+    if (value == null) return null;
+    if (_image is EqualUnmodifiableListView) return _image;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? description;
   @override
@@ -222,7 +278,13 @@ class _LodgingModel implements LodgingModel {
   }
 
   @override
-  final String? ownerID;
+  final UserModel? owner;
+  @override
+  final num? uploadDate;
+  @override
+  final num? lat;
+  @override
+  final num? lng;
 
   /// Create a copy of LodgingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -251,14 +313,18 @@ class _LodgingModel implements LodgingModel {
                 other.pricePerDay == pricePerDay) &&
             (identical(other.pricePerMonth, pricePerMonth) ||
                 other.pricePerMonth == pricePerMonth) &&
-            (identical(other.acreage, acreage) || other.acreage == acreage) &&
-            (identical(other.image, image) || other.image == image) &&
+            (identical(other.area, area) || other.area == area) &&
+            const DeepCollectionEquality().equals(other._image, _image) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.views, views) || other.views == views) &&
             const DeepCollectionEquality()
                 .equals(other._amenities, _amenities) &&
-            (identical(other.ownerID, ownerID) || other.ownerID == ownerID));
+            (identical(other.owner, owner) || other.owner == owner) &&
+            (identical(other.uploadDate, uploadDate) ||
+                other.uploadDate == uploadDate) &&
+            (identical(other.lat, lat) || other.lat == lat) &&
+            (identical(other.lng, lng) || other.lng == lng));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -270,16 +336,19 @@ class _LodgingModel implements LodgingModel {
       address,
       pricePerDay,
       pricePerMonth,
-      acreage,
-      image,
+      area,
+      const DeepCollectionEquality().hash(_image),
       description,
       views,
       const DeepCollectionEquality().hash(_amenities),
-      ownerID);
+      owner,
+      uploadDate,
+      lat,
+      lng);
 
   @override
   String toString() {
-    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, acreage: $acreage, image: $image, description: $description, views: $views, amenities: $amenities, ownerID: $ownerID)';
+    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, area: $area, image: $image, description: $description, views: $views, amenities: $amenities, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
   }
 }
 
@@ -297,12 +366,18 @@ abstract mixin class _$LodgingModelCopyWith<$Res>
       String? address,
       double? pricePerDay,
       double? pricePerMonth,
-      double? acreage,
-      String? image,
+      double? area,
+      List<String>? image,
       String? description,
       int? views,
       List<String>? amenities,
-      String? ownerID});
+      UserModel? owner,
+      num? uploadDate,
+      num? lat,
+      num? lng});
+
+  @override
+  $UserModelCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
@@ -323,12 +398,15 @@ class __$LodgingModelCopyWithImpl<$Res>
     Object? address = freezed,
     Object? pricePerDay = freezed,
     Object? pricePerMonth = freezed,
-    Object? acreage = freezed,
+    Object? area = freezed,
     Object? image = freezed,
     Object? description = freezed,
     Object? views = freezed,
     Object? amenities = freezed,
-    Object? ownerID = freezed,
+    Object? owner = freezed,
+    Object? uploadDate = freezed,
+    Object? lat = freezed,
+    Object? lng = freezed,
   }) {
     return _then(_LodgingModel(
       id: freezed == id
@@ -351,14 +429,14 @@ class __$LodgingModelCopyWithImpl<$Res>
           ? _self.pricePerMonth
           : pricePerMonth // ignore: cast_nullable_to_non_nullable
               as double?,
-      acreage: freezed == acreage
-          ? _self.acreage
-          : acreage // ignore: cast_nullable_to_non_nullable
+      area: freezed == area
+          ? _self.area
+          : area // ignore: cast_nullable_to_non_nullable
               as double?,
       image: freezed == image
-          ? _self.image
+          ? _self._image
           : image // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       description: freezed == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -371,11 +449,37 @@ class __$LodgingModelCopyWithImpl<$Res>
           ? _self._amenities
           : amenities // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      ownerID: freezed == ownerID
-          ? _self.ownerID
-          : ownerID // ignore: cast_nullable_to_non_nullable
-              as String?,
+      owner: freezed == owner
+          ? _self.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
+      uploadDate: freezed == uploadDate
+          ? _self.uploadDate
+          : uploadDate // ignore: cast_nullable_to_non_nullable
+              as num?,
+      lat: freezed == lat
+          ? _self.lat
+          : lat // ignore: cast_nullable_to_non_nullable
+              as num?,
+      lng: freezed == lng
+          ? _self.lng
+          : lng // ignore: cast_nullable_to_non_nullable
+              as num?,
     ));
+  }
+
+  /// Create a copy of LodgingModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get owner {
+    if (_self.owner == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_self.owner!, (value) {
+      return _then(_self.copyWith(owner: value));
+    });
   }
 }
 

@@ -13,14 +13,20 @@ _LodgingModel _$LodgingModelFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String?,
       pricePerDay: (json['pricePerDay'] as num?)?.toDouble(),
       pricePerMonth: (json['pricePerMonth'] as num?)?.toDouble(),
-      acreage: (json['acreage'] as num?)?.toDouble(),
-      image: json['image'] as String?,
+      area: (json['area'] as num?)?.toDouble(),
+      image:
+          (json['image'] as List<dynamic>?)?.map((e) => e as String).toList(),
       description: json['description'] as String?,
       views: (json['views'] as num?)?.toInt(),
       amenities: (json['amenities'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      ownerID: json['ownerID'] as String?,
+      owner: json['owner'] == null
+          ? null
+          : UserModel.fromJson(json['owner'] as Map<String, dynamic>),
+      uploadDate: json['uploadDate'] as num?,
+      lat: json['lat'] as num?,
+      lng: json['lng'] as num?,
     );
 
 Map<String, dynamic> _$LodgingModelToJson(_LodgingModel instance) =>
@@ -30,10 +36,13 @@ Map<String, dynamic> _$LodgingModelToJson(_LodgingModel instance) =>
       'address': instance.address,
       'pricePerDay': instance.pricePerDay,
       'pricePerMonth': instance.pricePerMonth,
-      'acreage': instance.acreage,
+      'area': instance.area,
       'image': instance.image,
       'description': instance.description,
       'views': instance.views,
       'amenities': instance.amenities,
-      'ownerID': instance.ownerID,
+      'owner': instance.owner,
+      'uploadDate': instance.uploadDate,
+      'lat': instance.lat,
+      'lng': instance.lng,
     };
