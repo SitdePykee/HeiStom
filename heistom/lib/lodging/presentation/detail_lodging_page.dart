@@ -48,6 +48,18 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
         ],
         actionsPadding: EdgeInsets.only(right: 16),
       ),
+      persistentFooterButtons: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Color(0xff21C3FF),
+            borderRadius: BorderRadius.circular(8)
+          ),
+          child: Center(
+            child: Text('Đặt phòng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),),
+          ),
+        )
+      ],
       body: SingleChildScrollView(
         child: Column(
           children: [
