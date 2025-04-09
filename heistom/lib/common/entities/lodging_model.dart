@@ -5,7 +5,7 @@ part 'lodging_model.freezed.dart';
 part 'lodging_model.g.dart';
 
 @freezed
-class LodgingModel with _$LodgingModel {
+sealed class LodgingModel with _$LodgingModel {
   factory LodgingModel({
     String? id,
     String? name,
