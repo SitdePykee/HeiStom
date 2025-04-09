@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:heistom/common/entities/lodging.dart';
-import 'package:heistom/renter/presentation/widgets/housecard.dart';
+import 'package:heistom/renter/presentation/widgets/housecard_vertical.dart';
 
-class HousecardView extends StatelessWidget {
-  final String title;
-  final Function() onPressed;
-  final List<Lodging> houses;
-
-  const HousecardView(
+class HousecardViewVertical extends StatelessWidget {
+  HousecardViewVertical(
       {super.key,
       required this.title,
       required this.onPressed,
       required this.houses});
+
+  final String title;
+  final Function() onPressed;
+  final List<Lodging> houses;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class HousecardView extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
               TextButton(
-                  onPressed: onPressed,
+                  onPressed: () {},
                   child: Text(
                     'Xem tất cả',
                     style: TextStyle(fontSize: 16, color: Color(0xff0163E0)),
@@ -35,21 +35,12 @@ class HousecardView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: houses
-                        .map((house) => HouseCard(
-                              lodging: house,
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ),
-            ],
+          Column(
+            children: houses
+                .map((house) => HouseCardVertical(
+                      lodging: house,
+                    ))
+                .toList(),
           )
         ],
       ),

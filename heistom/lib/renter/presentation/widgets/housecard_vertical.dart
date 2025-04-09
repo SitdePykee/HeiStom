@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:heistom/common/entities/lodging.dart';
 
-class HouseCard extends StatelessWidget {
-  HouseCard({super.key, required this.lodging});
+class HouseCardVertical extends StatelessWidget {
+  HouseCardVertical({
+    super.key,
+    required this.lodging,
+  });
 
   final Lodging lodging;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 232,
-      width: 276,
-      margin: EdgeInsets.only(right: 16, bottom: 9),
+      margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -24,20 +24,16 @@ class HouseCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
+                borderRadius: BorderRadius.all(Radius.circular(12)),
                 child: Image.asset(
                   lodging.image!,
-                  width: 276,
-                  height: 140,
+                  width: 87,
+                  height: 87,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -55,32 +51,42 @@ class HouseCard extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
+          SizedBox(
+            width: 8,
+          ),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  lodging.address!,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 8),
-                Text(
                   lodging.name!,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 4),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  lodging.address!,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
                 Text(
                   'VND ${lodging.pricePerDay}/ngày',
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontSize: 14,
-                      color: Colors.blue,
+                      color: Color(0xff18ACFE),
                       fontWeight: FontWeight.w500),
-                ),
+                )
               ],
             ),
+          ),
+          SizedBox(
+            width: 8,
           ),
         ],
       ),

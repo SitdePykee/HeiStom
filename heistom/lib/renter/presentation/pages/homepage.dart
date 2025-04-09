@@ -1,8 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:heistom/common/entities/lodging.dart';
+import 'package:heistom/renter/presentation/widgets/housecard_view.dart';
+import 'package:heistom/renter/presentation/widgets/housecard_view_grid.dart';
+import 'package:heistom/renter/presentation/widgets/housecard_view_vertical.dart';
 import 'package:heistom/renter/presentation/widgets/searchbar.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  List<Lodging> houseCards = [
+    Lodging(
+        id: '1',
+        name: 'Omina Hanoi Hotel & Travel',
+        address: '2B Phố Hàng Gà, Quận Hoàn Kiếm',
+        acreage: 100,
+        amenities: ['Wifi', 'Parking'],
+        pricePerDay: 100,
+        pricePerMonth: 2000,
+        image: 'assets/images/imgOnboarding2.jpeg',
+        description:
+            ' Des cri ption Desc ri ption Descr iptionDe scrip tion Descrip tion Descr iption ',
+        views: 10,
+        ownerID: 'owner1'),
+    Lodging(
+        id: '1',
+        name: 'House 1',
+        address: 'Location 1',
+        acreage: 100,
+        amenities: ['Wifi', 'Parking'],
+        pricePerDay: 100,
+        pricePerMonth: 2000,
+        image: 'assets/images/imgOnboarding2.jpeg',
+        description:
+            ' Des cri ption Desc ri ption Descr iptionDe scrip tion Descrip tion Descr iption ',
+        views: 10,
+        ownerID: 'owner1'),
+    Lodging(
+        id: '1',
+        name: 'House 1',
+        address: 'Location 1',
+        acreage: 100,
+        amenities: ['Wifi', 'Parking'],
+        pricePerDay: 100,
+        pricePerMonth: 2000,
+        image: 'assets/images/imgOnboarding2.jpeg',
+        description:
+            ' Des cri ption Desc ri ption Descr iptionDe scrip tion Descrip tion Descr iption ',
+        views: 10,
+        ownerID: 'owner1'),
+    Lodging(
+        id: '1',
+        name: 'House 1',
+        address: 'Location 1',
+        acreage: 100,
+        amenities: ['Wifi', 'Parking'],
+        pricePerDay: 100,
+        pricePerMonth: 2000,
+        image: 'assets/images/imgOnboarding2.jpeg',
+        description:
+            ' Des cri ption Desc ri ption Descr iptionDe scrip tion Descrip tion Descr iption ',
+        views: 10,
+        ownerID: 'owner1'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +92,24 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: FakeSearchBar(),
-              )
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              HousecardView(
+                  title: 'Gợi ý', onPressed: () {}, houses: houseCards),
+              SizedBox(
+                height: 16,
+              ),
+              HousecardViewVertical(
+                  title: 'Phòng mới đăng',
+                  onPressed: () {},
+                  houses: houseCards),
+              SizedBox(
+                height: 16,
+              ),
+              HousecardViewGrid(
+                  title: 'Nhiều hơn nữa', onPressed: () {}, houses: houseCards),
             ],
           ),
         ),
