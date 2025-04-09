@@ -1,70 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:heistom/common/entities/lodging.dart';
+import 'package:get/get.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
+import 'package:heistom/lodging/presentation/detail_lodging_page.dart';
 
 class HouseCardGrid extends StatelessWidget {
   HouseCardGrid({super.key, required this.lodging});
 
-  final Lodging lodging;
+  final LodgingEntity lodging;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 203,
-      width: 158,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 12,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-                child: Image.asset(
-                  lodging.image!,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
+    return InkWell(
+      onTap: () {
+        Get.to(() => DetailLodgingPage(lodging: lodging));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 12,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    child: Image.asset(
+                      lodging.image?.first ?? '',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
                   ),
-                  iconSize: 24,
-                  onPressed: () {},
-                ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: Colors.white,
+                      ),
+                      iconSize: 24,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     lodging.name!,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Spacer(),
+                  SizedBox(height: 8),
                   Text(
                     'VND ${lodging.pricePerDay}/ngày',
                     style: TextStyle(
@@ -72,16 +80,18 @@ class HouseCardGrid extends StatelessWidget {
                         color: Colors.blue,
                         fontWeight: FontWeight.w500),
                   ),
+                  SizedBox(height: 8),
                   Text(
                     lodging.address!,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

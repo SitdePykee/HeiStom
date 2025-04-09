@@ -20,6 +20,7 @@ mixin _$UserModel {
   String? get email;
   String? get phone;
   String? get avatar;
+  String? get address;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -40,16 +41,18 @@ mixin _$UserModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar));
+            (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.address, address) || other.address == address));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, email, phone, avatar);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, email, phone, avatar, address);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
   }
 }
 
@@ -59,7 +62,12 @@ abstract mixin class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl;
   @useResult
   $Res call(
-      {String? id, String? name, String? email, String? phone, String? avatar});
+      {String? id,
+      String? name,
+      String? email,
+      String? phone,
+      String? avatar,
+      String? address});
 }
 
 /// @nodoc
@@ -79,6 +87,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? email = freezed,
     Object? phone = freezed,
     Object? avatar = freezed,
+    Object? address = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -101,6 +110,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _self.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
               as String?,
+      address: freezed == address
+          ? _self.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -109,7 +122,8 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
 
 @JsonSerializable()
 class _UserModel implements UserModel {
-  _UserModel({this.id, this.name, this.email, this.phone, this.avatar});
+  _UserModel(
+      {this.id, this.name, this.email, this.phone, this.avatar, this.address});
   factory _UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
@@ -123,6 +137,8 @@ class _UserModel implements UserModel {
   final String? phone;
   @override
   final String? avatar;
+  @override
+  final String? address;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -148,16 +164,18 @@ class _UserModel implements UserModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar));
+            (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.address, address) || other.address == address));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, email, phone, avatar);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, email, phone, avatar, address);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
   }
 }
 
@@ -170,7 +188,12 @@ abstract mixin class _$UserModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id, String? name, String? email, String? phone, String? avatar});
+      {String? id,
+      String? name,
+      String? email,
+      String? phone,
+      String? avatar,
+      String? address});
 }
 
 /// @nodoc
@@ -190,6 +213,7 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? email = freezed,
     Object? phone = freezed,
     Object? avatar = freezed,
+    Object? address = freezed,
   }) {
     return _then(_UserModel(
       id: freezed == id
@@ -211,6 +235,10 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
       avatar: freezed == avatar
           ? _self.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _self.address
+          : address // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }

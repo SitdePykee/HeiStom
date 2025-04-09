@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heistom/common/entities/lodging.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
 
 class HouseCardVertical extends StatelessWidget {
   HouseCardVertical({
@@ -7,7 +7,7 @@ class HouseCardVertical extends StatelessWidget {
     required this.lodging,
   });
 
-  final Lodging lodging;
+  final LodgingEntity lodging;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class HouseCardVertical extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
                 child: Image.asset(
-                  lodging.image!,
+                  lodging.image?.first ?? '',
                   width: 87,
                   height: 87,
                   fit: BoxFit.cover,

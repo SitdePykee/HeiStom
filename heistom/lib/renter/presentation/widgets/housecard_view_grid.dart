@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heistom/common/data/model/lodging.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
 import 'package:heistom/renter/presentation/widgets/housecard_grid.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -12,7 +12,7 @@ class HousecardViewGrid extends StatelessWidget {
 
   final String title;
   final Function() onPressed;
-  final List<Lodging> houses;
+  final List<LodgingEntity> houses;
 
   @override
   Widget build(BuildContext context) {

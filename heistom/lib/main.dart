@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
 import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/lodging/presentation/detail_lodging_page.dart';
+import 'package:heistom/renter/presentation/pages/homepage.dart';
+
+import 'owner/presentation/detail_owner_page.dart';
 
 void main() {
   runApp(MainApp());
@@ -47,7 +50,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: DetailLodgingPage(lodging: lodging),
+      home: HomePage(),
     );
   }
 }
