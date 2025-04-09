@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:heistom/common/entities/lodging.dart';
-import 'package:heistom/renter/presentation/widgets/housecard.dart';
+import 'package:heistom/renter/presentation/widgets/housecard_grid.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class HousecardView extends StatelessWidget {
-  final String title;
-  final Function() onPressed;
-  final List<Lodging> houses;
-
-  const HousecardView(
+class HousecardViewGrid extends StatelessWidget {
+  HousecardViewGrid(
       {super.key,
       required this.title,
       required this.onPressed,
       required this.houses});
+
+  final String title;
+  final Function() onPressed;
+  final List<Lodging> houses;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class HousecardView extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
               TextButton(
-                  onPressed: onPressed,
+                  onPressed: () {},
                   child: Text(
                     'Xem tất cả',
                     style: TextStyle(fontSize: 16, color: Color(0xff0163E0)),
@@ -35,21 +36,16 @@ class HousecardView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: houses
-                        .map((house) => HouseCard(
-                              lodging: house,
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ),
-            ],
+          StaggeredGrid.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 16,
+            children: houses.map((house) {
+              return StaggeredGridTile.fit(
+                crossAxisCellCount: 1,
+                child: HouseCardGrid(lodging: house),
+              );
+            }).toList(),
           )
         ],
       ),
