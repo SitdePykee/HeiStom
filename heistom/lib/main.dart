@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heistom/authentication/presentation/login_page.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
 import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/lodging/presentation/detail_lodging_page.dart';
@@ -34,11 +35,13 @@ class MainApp extends StatelessWidget {
     owner: UserModel(
       id: '1',
       name: 'Owner 1',
-      avatar: 'https://sohanews.sohacdn.com/160588918557773824/2025/4/8/elon-musk-2025-worlds-richest-pe-11330752-1744127633018-17441276334511812934978.jpg',
+      avatar:
+          'https://sohanews.sohacdn.com/160588918557773824/2025/4/8/elon-musk-2025-worlds-richest-pe-11330752-1744127633018-17441276334511812934978.jpg',
       phone: '0909090909',
     ),
     area: 100,
-    uploadDate: DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
+    uploadDate:
+        DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
     lat: 21.028511,
     lng: 105.804817,
   );
@@ -50,7 +53,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }

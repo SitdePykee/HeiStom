@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:heistom/authentication/presentation/forgot_password_page.dart';
 import 'package:heistom/authentication/presentation/register_page.dart';
 
+import '../../renter/presentation/pages/homepage.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -38,9 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                   InkWell(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
+                        Get.offAll(() => HomePage());
                       }
                     },
                     child: Container(
