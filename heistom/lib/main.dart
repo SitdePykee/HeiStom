@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heistom/authentication/presentation/login_page.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
 import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/common/domain/entity/user_entity.dart';
@@ -56,7 +57,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
