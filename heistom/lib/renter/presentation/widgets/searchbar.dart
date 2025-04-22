@@ -9,7 +9,7 @@ class FakeSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const SearchPage());
+        Get.to(() => SearchPage());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
