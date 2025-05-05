@@ -23,15 +23,14 @@ class MainApp extends StatelessWidget {
     id: '1',
     name: 'Lodging 1',
     address: 'Address 1',
-    pricePerDay: 100,
-    pricePerMonth: 1000,
+    dayPrice: 100,
+    hourPrice: 1000,
     image: [
       'https://hnm.1cdn.vn/2020/11/07/nhipsonghanoi.hanoimoi.com.vn-uploads-images-phananh-2020-11-04-_cafe6.jpg',
       'https://hnm.1cdn.vn/2020/11/07/nhipsonghanoi.hanoimoi.com.vn-uploads-images-phananh-2020-11-04-_cafe6.jpg',
       'https://hnm.1cdn.vn/2020/11/07/nhipsonghanoi.hanoimoi.com.vn-uploads-images-phananh-2020-11-04-_cafe6.jpg',
     ],
     description: 'Description 1',
-    views: 100,
     amenities: [
       'free_wifi',
       'bike_to_airport',
@@ -57,7 +56,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: LoginPage(),
+      home: HomePage(),
     );
   }
 }

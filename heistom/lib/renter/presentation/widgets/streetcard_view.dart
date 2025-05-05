@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:heistom/common/domain/entity/street_entity.dart';
 import 'package:heistom/renter/presentation/widgets/housecard.dart';
+import 'package:heistom/renter/presentation/widgets/streetcard.dart';
 
 import '../../../common/domain/entity/lodging_entity.dart';
 
-class HousecardView extends StatelessWidget {
+class StreetcardView extends StatelessWidget {
   final String title;
   final Function() onPressed;
-  final List<LodgingEntity> houses;
+  final List<StreetEntity> streets;
 
-  const HousecardView(
+  const StreetcardView(
       {super.key,
       required this.title,
       required this.onPressed,
-      required this.houses});
+      required this.streets});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +46,9 @@ class HousecardView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: houses
-                        .map((house) => HouseCard(
-                              lodging: house,
+                    children: streets
+                        .map((street) => Streetcard(
+                              street: street,
                             ))
                         .toList(),
                   ),

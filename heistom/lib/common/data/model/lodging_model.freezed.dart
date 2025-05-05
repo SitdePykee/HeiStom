@@ -18,13 +18,15 @@ mixin _$LodgingModel {
   String? get id;
   String? get name;
   String? get address;
-  double? get pricePerDay;
-  double? get pricePerMonth;
+  double? get dayPrice;
+  double? get hourPrice;
   double? get area;
   List<String>? get image;
   String? get description;
-  int? get views;
   List<String>? get amenities;
+  List<RoomModel>? get rooms;
+  int? get rating;
+  List<ReviewModel>? get reviews;
   UserModel? get owner;
   num? get uploadDate;
   num? get lat;
@@ -49,16 +51,18 @@ mixin _$LodgingModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.pricePerDay, pricePerDay) ||
-                other.pricePerDay == pricePerDay) &&
-            (identical(other.pricePerMonth, pricePerMonth) ||
-                other.pricePerMonth == pricePerMonth) &&
+            (identical(other.dayPrice, dayPrice) ||
+                other.dayPrice == dayPrice) &&
+            (identical(other.hourPrice, hourPrice) ||
+                other.hourPrice == hourPrice) &&
             (identical(other.area, area) || other.area == area) &&
             const DeepCollectionEquality().equals(other.image, image) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.views, views) || other.views == views) &&
             const DeepCollectionEquality().equals(other.amenities, amenities) &&
+            const DeepCollectionEquality().equals(other.rooms, rooms) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            const DeepCollectionEquality().equals(other.reviews, reviews) &&
             (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.uploadDate, uploadDate) ||
                 other.uploadDate == uploadDate) &&
@@ -73,13 +77,15 @@ mixin _$LodgingModel {
       id,
       name,
       address,
-      pricePerDay,
-      pricePerMonth,
+      dayPrice,
+      hourPrice,
       area,
       const DeepCollectionEquality().hash(image),
       description,
-      views,
       const DeepCollectionEquality().hash(amenities),
+      const DeepCollectionEquality().hash(rooms),
+      rating,
+      const DeepCollectionEquality().hash(reviews),
       owner,
       uploadDate,
       lat,
@@ -87,7 +93,7 @@ mixin _$LodgingModel {
 
   @override
   String toString() {
-    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, area: $area, image: $image, description: $description, views: $views, amenities: $amenities, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
+    return 'LodgingModel(id: $id, name: $name, address: $address, dayPrice: $dayPrice, hourPrice: $hourPrice, area: $area, image: $image, description: $description, amenities: $amenities, rooms: $rooms, rating: $rating, reviews: $reviews, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
   }
 }
 
@@ -101,13 +107,15 @@ abstract mixin class $LodgingModelCopyWith<$Res> {
       {String? id,
       String? name,
       String? address,
-      double? pricePerDay,
-      double? pricePerMonth,
+      double? dayPrice,
+      double? hourPrice,
       double? area,
       List<String>? image,
       String? description,
-      int? views,
       List<String>? amenities,
+      List<RoomModel>? rooms,
+      int? rating,
+      List<ReviewModel>? reviews,
       UserModel? owner,
       num? uploadDate,
       num? lat,
@@ -131,13 +139,15 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
     Object? id = freezed,
     Object? name = freezed,
     Object? address = freezed,
-    Object? pricePerDay = freezed,
-    Object? pricePerMonth = freezed,
+    Object? dayPrice = freezed,
+    Object? hourPrice = freezed,
     Object? area = freezed,
     Object? image = freezed,
     Object? description = freezed,
-    Object? views = freezed,
     Object? amenities = freezed,
+    Object? rooms = freezed,
+    Object? rating = freezed,
+    Object? reviews = freezed,
     Object? owner = freezed,
     Object? uploadDate = freezed,
     Object? lat = freezed,
@@ -156,13 +166,13 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
           ? _self.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
-      pricePerDay: freezed == pricePerDay
-          ? _self.pricePerDay
-          : pricePerDay // ignore: cast_nullable_to_non_nullable
+      dayPrice: freezed == dayPrice
+          ? _self.dayPrice
+          : dayPrice // ignore: cast_nullable_to_non_nullable
               as double?,
-      pricePerMonth: freezed == pricePerMonth
-          ? _self.pricePerMonth
-          : pricePerMonth // ignore: cast_nullable_to_non_nullable
+      hourPrice: freezed == hourPrice
+          ? _self.hourPrice
+          : hourPrice // ignore: cast_nullable_to_non_nullable
               as double?,
       area: freezed == area
           ? _self.area
@@ -176,14 +186,22 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      views: freezed == views
-          ? _self.views
-          : views // ignore: cast_nullable_to_non_nullable
-              as int?,
       amenities: freezed == amenities
           ? _self.amenities
           : amenities // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      rooms: freezed == rooms
+          ? _self.rooms
+          : rooms // ignore: cast_nullable_to_non_nullable
+              as List<RoomModel>?,
+      rating: freezed == rating
+          ? _self.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as int?,
+      reviews: freezed == reviews
+          ? _self.reviews
+          : reviews // ignore: cast_nullable_to_non_nullable
+              as List<ReviewModel>?,
       owner: freezed == owner
           ? _self.owner
           : owner // ignore: cast_nullable_to_non_nullable
@@ -225,19 +243,23 @@ class _LodgingModel implements LodgingModel {
       {this.id,
       this.name,
       this.address,
-      this.pricePerDay,
-      this.pricePerMonth,
+      this.dayPrice,
+      this.hourPrice,
       this.area,
       final List<String>? image,
       this.description,
-      this.views,
       final List<String>? amenities,
+      final List<RoomModel>? rooms,
+      this.rating,
+      final List<ReviewModel>? reviews,
       this.owner,
       this.uploadDate,
       this.lat,
       this.lng})
       : _image = image,
-        _amenities = amenities;
+        _amenities = amenities,
+        _rooms = rooms,
+        _reviews = reviews;
   factory _LodgingModel.fromJson(Map<String, dynamic> json) =>
       _$LodgingModelFromJson(json);
 
@@ -248,9 +270,9 @@ class _LodgingModel implements LodgingModel {
   @override
   final String? address;
   @override
-  final double? pricePerDay;
+  final double? dayPrice;
   @override
-  final double? pricePerMonth;
+  final double? hourPrice;
   @override
   final double? area;
   final List<String>? _image;
@@ -265,14 +287,34 @@ class _LodgingModel implements LodgingModel {
 
   @override
   final String? description;
-  @override
-  final int? views;
   final List<String>? _amenities;
   @override
   List<String>? get amenities {
     final value = _amenities;
     if (value == null) return null;
     if (_amenities is EqualUnmodifiableListView) return _amenities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<RoomModel>? _rooms;
+  @override
+  List<RoomModel>? get rooms {
+    final value = _rooms;
+    if (value == null) return null;
+    if (_rooms is EqualUnmodifiableListView) return _rooms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final int? rating;
+  final List<ReviewModel>? _reviews;
+  @override
+  List<ReviewModel>? get reviews {
+    final value = _reviews;
+    if (value == null) return null;
+    if (_reviews is EqualUnmodifiableListView) return _reviews;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -309,17 +351,19 @@ class _LodgingModel implements LodgingModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.pricePerDay, pricePerDay) ||
-                other.pricePerDay == pricePerDay) &&
-            (identical(other.pricePerMonth, pricePerMonth) ||
-                other.pricePerMonth == pricePerMonth) &&
+            (identical(other.dayPrice, dayPrice) ||
+                other.dayPrice == dayPrice) &&
+            (identical(other.hourPrice, hourPrice) ||
+                other.hourPrice == hourPrice) &&
             (identical(other.area, area) || other.area == area) &&
             const DeepCollectionEquality().equals(other._image, _image) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.views, views) || other.views == views) &&
             const DeepCollectionEquality()
                 .equals(other._amenities, _amenities) &&
+            const DeepCollectionEquality().equals(other._rooms, _rooms) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            const DeepCollectionEquality().equals(other._reviews, _reviews) &&
             (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.uploadDate, uploadDate) ||
                 other.uploadDate == uploadDate) &&
@@ -334,13 +378,15 @@ class _LodgingModel implements LodgingModel {
       id,
       name,
       address,
-      pricePerDay,
-      pricePerMonth,
+      dayPrice,
+      hourPrice,
       area,
       const DeepCollectionEquality().hash(_image),
       description,
-      views,
       const DeepCollectionEquality().hash(_amenities),
+      const DeepCollectionEquality().hash(_rooms),
+      rating,
+      const DeepCollectionEquality().hash(_reviews),
       owner,
       uploadDate,
       lat,
@@ -348,7 +394,7 @@ class _LodgingModel implements LodgingModel {
 
   @override
   String toString() {
-    return 'LodgingModel(id: $id, name: $name, address: $address, pricePerDay: $pricePerDay, pricePerMonth: $pricePerMonth, area: $area, image: $image, description: $description, views: $views, amenities: $amenities, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
+    return 'LodgingModel(id: $id, name: $name, address: $address, dayPrice: $dayPrice, hourPrice: $hourPrice, area: $area, image: $image, description: $description, amenities: $amenities, rooms: $rooms, rating: $rating, reviews: $reviews, owner: $owner, uploadDate: $uploadDate, lat: $lat, lng: $lng)';
   }
 }
 
@@ -364,13 +410,15 @@ abstract mixin class _$LodgingModelCopyWith<$Res>
       {String? id,
       String? name,
       String? address,
-      double? pricePerDay,
-      double? pricePerMonth,
+      double? dayPrice,
+      double? hourPrice,
       double? area,
       List<String>? image,
       String? description,
-      int? views,
       List<String>? amenities,
+      List<RoomModel>? rooms,
+      int? rating,
+      List<ReviewModel>? reviews,
       UserModel? owner,
       num? uploadDate,
       num? lat,
@@ -396,13 +444,15 @@ class __$LodgingModelCopyWithImpl<$Res>
     Object? id = freezed,
     Object? name = freezed,
     Object? address = freezed,
-    Object? pricePerDay = freezed,
-    Object? pricePerMonth = freezed,
+    Object? dayPrice = freezed,
+    Object? hourPrice = freezed,
     Object? area = freezed,
     Object? image = freezed,
     Object? description = freezed,
-    Object? views = freezed,
     Object? amenities = freezed,
+    Object? rooms = freezed,
+    Object? rating = freezed,
+    Object? reviews = freezed,
     Object? owner = freezed,
     Object? uploadDate = freezed,
     Object? lat = freezed,
@@ -421,13 +471,13 @@ class __$LodgingModelCopyWithImpl<$Res>
           ? _self.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
-      pricePerDay: freezed == pricePerDay
-          ? _self.pricePerDay
-          : pricePerDay // ignore: cast_nullable_to_non_nullable
+      dayPrice: freezed == dayPrice
+          ? _self.dayPrice
+          : dayPrice // ignore: cast_nullable_to_non_nullable
               as double?,
-      pricePerMonth: freezed == pricePerMonth
-          ? _self.pricePerMonth
-          : pricePerMonth // ignore: cast_nullable_to_non_nullable
+      hourPrice: freezed == hourPrice
+          ? _self.hourPrice
+          : hourPrice // ignore: cast_nullable_to_non_nullable
               as double?,
       area: freezed == area
           ? _self.area
@@ -441,14 +491,22 @@ class __$LodgingModelCopyWithImpl<$Res>
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      views: freezed == views
-          ? _self.views
-          : views // ignore: cast_nullable_to_non_nullable
-              as int?,
       amenities: freezed == amenities
           ? _self._amenities
           : amenities // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      rooms: freezed == rooms
+          ? _self._rooms
+          : rooms // ignore: cast_nullable_to_non_nullable
+              as List<RoomModel>?,
+      rating: freezed == rating
+          ? _self.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as int?,
+      reviews: freezed == reviews
+          ? _self._reviews
+          : reviews // ignore: cast_nullable_to_non_nullable
+              as List<ReviewModel>?,
       owner: freezed == owner
           ? _self.owner
           : owner // ignore: cast_nullable_to_non_nullable

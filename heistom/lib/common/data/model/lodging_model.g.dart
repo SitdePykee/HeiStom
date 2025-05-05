@@ -11,15 +11,21 @@ _LodgingModel _$LodgingModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String?,
       name: json['name'] as String?,
       address: json['address'] as String?,
-      pricePerDay: (json['pricePerDay'] as num?)?.toDouble(),
-      pricePerMonth: (json['pricePerMonth'] as num?)?.toDouble(),
+      dayPrice: (json['dayPrice'] as num?)?.toDouble(),
+      hourPrice: (json['hourPrice'] as num?)?.toDouble(),
       area: (json['area'] as num?)?.toDouble(),
       image:
           (json['image'] as List<dynamic>?)?.map((e) => e as String).toList(),
       description: json['description'] as String?,
-      views: (json['views'] as num?)?.toInt(),
       amenities: (json['amenities'] as List<dynamic>?)
           ?.map((e) => e as String)
+          .toList(),
+      rooms: (json['rooms'] as List<dynamic>?)
+          ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      rating: (json['rating'] as num?)?.toInt(),
+      reviews: (json['reviews'] as List<dynamic>?)
+          ?.map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       owner: json['owner'] == null
           ? null
@@ -34,13 +40,15 @@ Map<String, dynamic> _$LodgingModelToJson(_LodgingModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'address': instance.address,
-      'pricePerDay': instance.pricePerDay,
-      'pricePerMonth': instance.pricePerMonth,
+      'dayPrice': instance.dayPrice,
+      'hourPrice': instance.hourPrice,
       'area': instance.area,
       'image': instance.image,
       'description': instance.description,
-      'views': instance.views,
       'amenities': instance.amenities,
+      'rooms': instance.rooms,
+      'rating': instance.rating,
+      'reviews': instance.reviews,
       'owner': instance.owner,
       'uploadDate': instance.uploadDate,
       'lat': instance.lat,

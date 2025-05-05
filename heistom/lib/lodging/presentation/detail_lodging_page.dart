@@ -84,20 +84,20 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'VND ${widget.lodging.pricePerDay}/ 1 ngày',
+                  'VND ${widget.lodging.dayPrice}/ 1 ngày',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Color(0xff21C3FF)),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  '${widget.lodging.uploadDate?.toDayCountString()} / ${widget.lodging.views ?? 0} lượt xem',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff8D959D)),
-                ),
+                // Text(
+                //   '${widget.lodging.uploadDate?.toDayCountString()} / ${widget.lodging.views ?? 0} lượt xem',
+                //   style: TextStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w400,
+                //       color: Color(0xff8D959D)),
+                // ),
                 const SizedBox(height: 8),
                 Row(
                   spacing: 8,

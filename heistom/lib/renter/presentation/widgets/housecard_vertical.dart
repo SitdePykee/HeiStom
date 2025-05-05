@@ -75,7 +75,7 @@ class HouseCardVertical extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  'VND ${lodging.pricePerDay}/ngày',
+                  'VND ${lodging.dayPrice}/ngày',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontSize: 14,

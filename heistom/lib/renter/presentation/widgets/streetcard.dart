@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heistom/common/domain/entity/street_entity.dart';
 import '../../../common/domain/entity/lodging_entity.dart';
 import '../../../lodging/presentation/detail_lodging_page.dart';
 
-class HouseCard extends StatelessWidget {
-  HouseCard({super.key, required this.lodging});
+class Streetcard extends StatelessWidget {
+  Streetcard({super.key, required this.street});
 
-  final LodgingEntity lodging;
+  final StreetEntity street;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          Get.to(() => DetailLodgingPage(lodging: lodging));
-        },
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.only(right: 12.0),
           child: Column(
@@ -21,7 +20,7 @@ class HouseCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  lodging.image?.first ?? '',
+                  street.image ?? '',
                   fit: BoxFit.cover,
                   width: 74,
                   height: 74,
@@ -44,7 +43,7 @@ class HouseCard extends StatelessWidget {
               Container(
                 width: 74,
                 child: Text(
-                  lodging.name ?? 'No name',
+                  street.name ?? 'No name',
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,

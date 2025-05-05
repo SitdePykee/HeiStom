@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:heistom/common/data/model/review_model.dart';
+import 'package:heistom/common/data/model/room_model.dart';
 import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
 
@@ -11,13 +13,15 @@ sealed class LodgingModel with _$LodgingModel {
     String? id,
     String? name,
     String? address,
-    double? pricePerDay,
-    double? pricePerMonth,
+    double? dayPrice,
+    double? hourPrice,
     double? area,
     List<String>? image,
     String? description,
-    int? views,
     List<String>? amenities,
+    List<RoomModel>? rooms,
+    int? rating,
+    List<ReviewModel>? reviews,
     UserModel? owner,
     num? uploadDate,
     num? lat,
@@ -33,12 +37,15 @@ extension LodgingModelX on LodgingModel {
         id: id,
         name: name,
         address: address,
-        pricePerDay: pricePerDay,
-        pricePerMonth: pricePerMonth,
+        dayPrice: dayPrice,
+        hourPrice: hourPrice,
         area: area,
         image: image,
+        amenities: amenities,
+        rating: rating,
+        reviews: reviews?.map((review) => review.toEntity()).toList(),
+        rooms: rooms?.map((room) => room.toEntity()).toList(),
         description: description,
-        views: views,
         owner: owner?.toEntity(),
         uploadDate: uploadDate,
         lat: lat,

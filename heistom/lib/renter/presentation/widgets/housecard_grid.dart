@@ -74,7 +74,7 @@ class HouseCardGrid extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'VND ${lodging.pricePerDay}/ngày',
+                    'VND ${lodging.dayPrice}/ngày',
                     style: TextStyle(
                         fontSize: 14,
                         color: Colors.blue,
