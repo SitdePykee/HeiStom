@@ -21,7 +21,6 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final GlobalController globalController = Get.find<GlobalController>();
-  final TextEditingController _searchController = TextEditingController();
   final SearchHouseController controller = Get.put(SearchHouseController());
 
   final List<Map<String, String>> suggestions = [
@@ -110,6 +109,7 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 3.0),
                 child: TypeAheadField<LodgingEntity>(
+                  controller: controller.searchController,
                   suggestionsCallback: (String search) {
                     return houses.where((lodging) {
                       final query = search.toLowerCase();
