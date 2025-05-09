@@ -121,7 +121,6 @@ class HomePage extends StatelessWidget {
                     return TextField(
                         controller: controller,
                         focusNode: focusNode,
-                        autofocus: true,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.location_on_outlined,
