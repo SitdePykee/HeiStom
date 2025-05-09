@@ -25,7 +25,7 @@ mixin _$LodgingModel {
   String? get description;
   List<String>? get amenities;
   List<RoomModel>? get rooms;
-  int? get rating;
+  double? get rating;
   List<ReviewModel>? get reviews;
   UserModel? get owner;
   num? get uploadDate;
@@ -114,7 +114,7 @@ abstract mixin class $LodgingModelCopyWith<$Res> {
       String? description,
       List<String>? amenities,
       List<RoomModel>? rooms,
-      int? rating,
+      double? rating,
       List<ReviewModel>? reviews,
       UserModel? owner,
       num? uploadDate,
@@ -197,7 +197,7 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
       rating: freezed == rating
           ? _self.rating
           : rating // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       reviews: freezed == reviews
           ? _self.reviews
           : reviews // ignore: cast_nullable_to_non_nullable
@@ -308,7 +308,7 @@ class _LodgingModel implements LodgingModel {
   }
 
   @override
-  final int? rating;
+  final double? rating;
   final List<ReviewModel>? _reviews;
   @override
   List<ReviewModel>? get reviews {
@@ -417,7 +417,7 @@ abstract mixin class _$LodgingModelCopyWith<$Res>
       String? description,
       List<String>? amenities,
       List<RoomModel>? rooms,
-      int? rating,
+      double? rating,
       List<ReviewModel>? reviews,
       UserModel? owner,
       num? uploadDate,
@@ -502,7 +502,7 @@ class __$LodgingModelCopyWithImpl<$Res>
       rating: freezed == rating
           ? _self.rating
           : rating // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       reviews: freezed == reviews
           ? _self._reviews
           : reviews // ignore: cast_nullable_to_non_nullable

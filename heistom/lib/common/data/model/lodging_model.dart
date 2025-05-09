@@ -20,7 +20,7 @@ sealed class LodgingModel with _$LodgingModel {
     String? description,
     List<String>? amenities,
     List<RoomModel>? rooms,
-    int? rating,
+    double? rating,
     List<ReviewModel>? reviews,
     UserModel? owner,
     num? uploadDate,

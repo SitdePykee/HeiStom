@@ -1,7 +1,9 @@
+import 'package:heistom/common/domain/entity/user_entity.dart';
+
 class ReviewEntity {
   final String? id;
   final double? rating;
-  final String? reviewerID;
+  final UserEntity? reviewer;
   final String? lodgingID;
   final String? comment;
   final num? postAt;
@@ -9,7 +11,7 @@ class ReviewEntity {
   ReviewEntity({
     this.id,
     this.rating,
-    this.reviewerID,
+    this.reviewer,
     this.lodgingID,
     this.comment,
     this.postAt,

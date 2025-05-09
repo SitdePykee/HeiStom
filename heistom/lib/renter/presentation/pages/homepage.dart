@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heistom/common/domain/entity/review_entity.dart';
 import 'package:heistom/common/domain/entity/street_entity.dart';
 import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
+import 'package:heistom/renter/presentation/pages/search_result_page.dart';
 import 'package:heistom/renter/presentation/widgets/choose_amenities_dialog.dart';
 import 'package:heistom/renter/presentation/widgets/counter_tile.dart';
 import 'package:heistom/renter/presentation/widgets/housecard_view.dart';
@@ -248,7 +250,9 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => SearchResultPage());
+                  },
                   child: Text(
                     'Tìm kiếm',
                     style: TextStyle(color: Colors.white, fontSize: 18),
@@ -271,17 +275,102 @@ class HomePage extends StatelessWidget {
   }
 }
 
+List<ReviewEntity> sampleReviews = [
+  ReviewEntity(
+    id: 'r1',
+    rating: 4.8,
+    reviewer: UserEntity(
+      id: 'u1',
+      name: 'John Doe',
+      avatar: 'https://example.com/avatar1.png',
+    ),
+    lodgingID: 'l1',
+    comment: 'Amazing place, highly recommended!',
+    postAt:
+        DateTime.now().subtract(Duration(minutes: 5)).millisecondsSinceEpoch,
+  ),
+  ReviewEntity(
+    id: 'r2',
+    rating: 4.5,
+    reviewer: UserEntity(
+      id: 'u2',
+      name: 'Alice Smith',
+      avatar: 'https://example.com/avatar2.png',
+    ),
+    lodgingID: 'l1',
+    comment: 'Very comfortable and clean.',
+    postAt: DateTime.now().subtract(Duration(hours: 2)).millisecondsSinceEpoch,
+  ),
+  ReviewEntity(
+    id: 'r3',
+    rating: 3.9,
+    reviewer: UserEntity(
+      id: 'u3',
+      name: 'Bob Johnson',
+      avatar: 'https://example.com/avatar3.png',
+    ),
+    lodgingID: 'l1',
+    comment: 'Good but could be better.',
+    postAt: DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
+  ),
+  ReviewEntity(
+    id: 'r4',
+    rating: 5.0,
+    reviewer: UserEntity(
+      id: 'u4',
+      name: 'Emily Clark',
+      avatar: 'https://example.com/avatar4.png',
+    ),
+    lodgingID: 'l1',
+    comment: 'Perfect for a family vacation!',
+    postAt: DateTime.now().subtract(Duration(days: 30)).millisecondsSinceEpoch,
+  ),
+  ReviewEntity(
+    id: 'r5',
+    rating: 4.2,
+    reviewer: UserEntity(
+      id: 'u5',
+      name: 'David Brown',
+      avatar: 'https://example.com/avatar5.png',
+    ),
+    lodgingID: 'l1',
+    comment: 'Nice place but a bit noisy at night.',
+    postAt: DateTime.now().subtract(Duration(days: 365)).millisecondsSinceEpoch,
+  ),
+];
+
 List<LodgingEntity> houses = [
   LodgingEntity(
     id: '1',
     name: 'Omina Hanoi Hotel & Travel',
     address: '2B Phố Hàng Gà, Quận Hoàn Kiếm, Hà Nội',
     area: 90,
-    amenities: ['free_wifi', 'bike_to_airport'],
+    rating: 3.5,
+    reviews: sampleReviews,
+    amenities: [
+      'free_wifi',
+      'gym',
+      'free_breakfast',
+      'children_friendly',
+      'free_parking',
+      'pet_friendly',
+      'air_conditioning',
+      'swimming_pool',
+      'bar',
+      'private_dining_room',
+      'bike_to_airport'
+    ],
     dayPrice: 100,
     hourPrice: 2000,
     image: [
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640'
+      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
+      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
+      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640',
+      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
+      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
+      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640',
+      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
+      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
     ],
     description:
         'Khách sạn nằm tại trung tâm Hà Nội, thuận tiện đi lại và có đầy đủ tiện nghi.',

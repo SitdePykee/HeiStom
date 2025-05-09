@@ -23,7 +23,7 @@ _LodgingModel _$LodgingModelFromJson(Map<String, dynamic> json) =>
       rooms: (json['rooms'] as List<dynamic>?)
           ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      rating: (json['rating'] as num?)?.toInt(),
+      rating: (json['rating'] as num?)?.toDouble(),
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
           .toList(),

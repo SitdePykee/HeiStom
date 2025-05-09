@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/domain/entity/street_entity.dart';
 import '../../../common/domain/entity/lodging_entity.dart';
-import '../../../lodging/presentation/detail_lodging_page.dart';
+import '../../../lodging/presentation/pages/detail_lodging_page.dart';
 
 class Streetcard extends StatelessWidget {
   Streetcard({super.key, required this.street});
@@ -24,17 +24,6 @@ class Streetcard extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: 74,
                   height: 74,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
-                    );
-                  },
                 ),
               ),
               const SizedBox(

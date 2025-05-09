@@ -14,7 +14,7 @@ class LodgingEntity {
   List<String>? image;
   String? description;
   List<RoomEntity>? rooms;
-  int? rating;
+  double? rating;
   List<ReviewEntity>? reviews;
   List<String>? amenities;
   UserEntity? owner;

@@ -1,3 +1,4 @@
+import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/common/domain/entity/review_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -8,7 +9,7 @@ part 'review_model.freezed.dart';
 sealed class ReviewModel with _$ReviewModel {
   @JsonSerializable()
   factory ReviewModel({
-    String? reviewerID,
+    UserModel? reviewer,
     String? lodgingID,
     double? rating,
     String? comment,
@@ -21,7 +22,7 @@ sealed class ReviewModel with _$ReviewModel {
 
 extension ReviewModelX on ReviewModel {
   ReviewEntity toEntity() => ReviewEntity(
-        reviewerID: reviewerID,
+        reviewer: reviewer?.toEntity(),
         lodgingID: lodgingID,
         rating: rating,
         comment: comment,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
-import 'package:heistom/lodging/presentation/detail_lodging_page.dart';
+import 'package:heistom/lodging/presentation/pages/detail_lodging_page.dart';
 
 class HouseCardGrid extends StatelessWidget {
   HouseCardGrid({super.key, required this.lodging});

@@ -5,7 +5,7 @@ import 'package:heistom/common/data/model/lodging_model.dart';
 import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/common/domain/entity/user_entity.dart';
 import 'package:heistom/common/global_controller.dart';
-import 'package:heistom/lodging/presentation/detail_lodging_page.dart';
+import 'package:heistom/lodging/presentation/pages/detail_lodging_page.dart';
 import 'package:heistom/renter/presentation/pages/homepage.dart';
 
 import 'owner/presentation/detail_owner_page.dart';
