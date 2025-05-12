@@ -5,7 +5,13 @@ import 'package:heistom/common/data/model/user_model.dart';
 import 'package:heistom/common/domain/entity/user_entity.dart';
 import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/owner/presentation/detail_owner_page.dart';
+import 'package:heistom/owner/presentation/pages/owner_create_homestay_page.dart';
+import 'package:heistom/owner/presentation/pages/owner_home_page.dart';
 import 'package:heistom/renter/presentation/pages/homepage.dart';
+
+import 'owner/presentation/pages/owner_booking_list_page.dart';
+import 'owner/presentation/pages/owner_edit_personal_info_page.dart';
+import 'owner/presentation/pages/owner_statistics_page.dart';
 
 void main() {
   Get.put(GlobalController());
@@ -62,6 +68,8 @@ class NavBarScreen extends StatefulWidget {
 class _NavBarScreenState extends State<NavBarScreen> {
   int _selectedIndex = 0;
 
+  final GlobalController globalController = Get.find();
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -71,7 +79,9 @@ class _NavBarScreenState extends State<NavBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _getSelectedPage(),
+      body: globalController.user.role == 'USER'
+          ? _getUserSelectedPage()
+          : _getOwnerSelectedPage(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
@@ -81,12 +91,20 @@ class _NavBarScreenState extends State<NavBarScreen> {
         unselectedItemColor: Colors.blue,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        items: [
-          _buildNavItem(Icons.home, 0),
-          _buildNavItem(Icons.favorite, 1),
-          _buildNavItem(Icons.house, 2),
-          _buildNavItem(Icons.person, 3),
-        ],
+        items: globalController.user.role == 'USER'
+            ? [
+                _buildNavItem(Icons.home, 0),
+                _buildNavItem(Icons.favorite, 1),
+                _buildNavItem(Icons.house, 2),
+                _buildNavItem(Icons.person, 3),
+              ]
+            : [
+                _buildNavItem(Icons.home, 0),
+                _buildNavItem(Icons.add_box_rounded, 1),
+                _buildNavItem(Icons.chair_rounded, 2),
+                _buildNavItem(Icons.equalizer_rounded, 3),
+                _buildNavItem(Icons.person, 4),
+              ],
       ),
     );
   }
@@ -108,10 +126,10 @@ class _NavBarScreenState extends State<NavBarScreen> {
     );
   }
 
-  Widget _getSelectedPage() {
+  Widget _getUserSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-        return HomePage();
+        return OwnerHomePage();
       case 1:
         return Placeholder();
       case 2:
@@ -128,6 +146,21 @@ class _NavBarScreenState extends State<NavBarScreen> {
         );
       default:
         return HomePage();
+    }
+  }
+
+  Widget _getOwnerSelectedPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return OwnerHomePage();
+      case 1:
+        return OwnerCreateHomestayPage();
+      case 2:
+        return OwnerBookingListPage();
+      case 3:
+        return OwnerStatisticsPage();
+      default:
+        return OwnerEditPersonalInfoPage();
     }
   }
 }
