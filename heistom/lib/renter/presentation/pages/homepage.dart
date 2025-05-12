@@ -69,7 +69,8 @@ class HomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar!),
+                  image: NetworkImage(globalController.user.avatar ??
+                      'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -143,7 +144,9 @@ class HomePage extends StatelessWidget {
                       ),
                     );
                   },
-                  onSelected: (house) {},
+                  onSelected: (house) {
+                    controller.searchController.text = house.name!;
+                  },
                 ),
               ),
               Obx(() => ListTile(
@@ -265,7 +268,11 @@ class HomePage extends StatelessWidget {
                   streets: streets),
               const SizedBox(height: 16),
               HousecardView(
-                  onPressed: () {}, houses: houses, title: 'Địa điểm hàng đầu'),
+                onPressed: () {},
+                houses: houses,
+                title: 'Địa điểm hàng đầu',
+                isSearched: false,
+              ),
             ],
           ),
         ),

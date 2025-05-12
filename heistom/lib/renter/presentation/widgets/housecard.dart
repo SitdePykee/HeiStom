@@ -4,7 +4,8 @@ import '../../../common/domain/entity/lodging_entity.dart';
 import '../../../lodging/presentation/pages/detail_lodging_page.dart';
 
 class HouseCard extends StatelessWidget {
-  HouseCard({super.key, required this.lodging});
+  HouseCard({super.key, this.isSearched = true, required this.lodging});
+  bool isSearched;
 
   final LodgingEntity lodging;
 
@@ -12,7 +13,8 @@ class HouseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Get.to(() => DetailLodgingPage(lodging: lodging));
+          Get.to(() =>
+              DetailLodgingPage(lodging: lodging, isSearched: isSearched));
         },
         child: Padding(
           padding: const EdgeInsets.only(right: 12.0),

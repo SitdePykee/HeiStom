@@ -7,9 +7,11 @@ class HousecardView extends StatelessWidget {
   final String title;
   final Function() onPressed;
   final List<LodgingEntity> houses;
+  bool isSearched;
 
-  const HousecardView(
+  HousecardView(
       {super.key,
+      this.isSearched = true,
       required this.title,
       required this.onPressed,
       required this.houses});
@@ -47,6 +49,7 @@ class HousecardView extends StatelessWidget {
                     children: houses
                         .map((house) => HouseCard(
                               lodging: house,
+                              isSearched: isSearched,
                             ))
                         .toList(),
                   ),

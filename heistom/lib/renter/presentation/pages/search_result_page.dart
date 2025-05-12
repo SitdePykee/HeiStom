@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
-import 'package:heistom/renter/presentation/widgets/housecard_view.dart';
 import 'package:heistom/renter/presentation/widgets/housecard_tile_view.dart';
 
 class SearchResultPage extends StatelessWidget {
   SearchResultPage({super.key});
 
-  SearchHouseController controller = Get.find<SearchHouseController>();
+  final SearchHouseController controller = Get.find<SearchHouseController>();
 
   @override
   Widget build(BuildContext context) {

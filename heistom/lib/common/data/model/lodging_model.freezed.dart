@@ -237,6 +237,7 @@ class _$LodgingModelCopyWithImpl<$Res> implements $LodgingModelCopyWith<$Res> {
 }
 
 /// @nodoc
+
 @JsonSerializable()
 class _LodgingModel implements LodgingModel {
   _LodgingModel(

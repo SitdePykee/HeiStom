@@ -9,6 +9,7 @@ part 'lodging_model.g.dart';
 
 @freezed
 sealed class LodgingModel with _$LodgingModel {
+  @JsonSerializable()
   factory LodgingModel({
     String? id,
     String? name,

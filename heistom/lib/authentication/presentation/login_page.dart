@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heistom/authentication/data/repository/authentication_repository.dart';
 import 'package:heistom/authentication/presentation/forgot_password_page.dart';
 import 'package:heistom/authentication/presentation/register_page.dart';
+import 'package:heistom/main.dart';
 
 import '../../renter/presentation/pages/homepage.dart';
 
@@ -14,6 +16,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final AuthenticationRepository authenticationRepository =
+      AuthenticationRepository();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +39,20 @@ class _LoginPageState extends State<LoginPage> {
               key: _formKey,
               child: Column(
                 children: [
-                  _emailTextField(),
+                  _emailTextField(
+                    emailController: emailController,
+                  ),
                   SizedBox(height: 16),
-                  _passwordTextField(),
+                  _passwordTextField(
+                    passwordController: passwordController,
+                  ),
                   SizedBox(height: 24),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (_formKey.currentState!.validate()) {
-                        Get.offAll(() => HomePage());
+                        await authenticationRepository.signIn(
+                            emailController.text, passwordController.text);
+                        Get.offAll(() => NavBarScreen());
                       }
                     },
                     child: Container(
@@ -180,15 +192,17 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class _passwordTextField extends StatelessWidget {
-  const _passwordTextField({
-    super.key,
+  _passwordTextField({
+    required this.passwordController,
   });
+  final TextEditingController passwordController;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextFormField(
+        controller: passwordController,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Password cannot be blank';
@@ -218,15 +232,18 @@ class _passwordTextField extends StatelessWidget {
 }
 
 class _emailTextField extends StatelessWidget {
-  const _emailTextField({
-    super.key,
+  _emailTextField({
+    required this.emailController,
   });
+
+  final TextEditingController emailController;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextFormField(
+        controller: emailController,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Email cannot be blank';
