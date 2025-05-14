@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heistom/common/extensions/num_extensions.dart';
+import 'package:heistom/owner/data/model/lodging_booking_detail_model.dart';
+import 'package:intl/intl.dart';
 
 import '../../../common/widgets/app_bar.dart';
+import '../controllers/owner_view_booking_detail_c.dart';
 
 class OwnerViewDetailBookingPage extends StatelessWidget {
-  const OwnerViewDetailBookingPage({super.key});
+  OwnerViewDetailBookingPage({super.key, required this.bookingId});
+
+  final String bookingId;
+
+  late final controller =
+      Get.put(OwnerViewBookingDetailController(bookingId: bookingId));
+
+  LodgingBookingDetailModel get booking => controller.bookingDetail.value!;
+
+  final NumberFormat _currencyFormat =
+      NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
 
   @override
   Widget build(BuildContext context) {
@@ -11,39 +26,50 @@ class OwnerViewDetailBookingPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppBarWidget(),
-              const SizedBox(height: 16),
-              // Hotel Name
-              _buildHotelName(),
-              const SizedBox(height: 24),
-              // Room Information Section
-              _buildSectionTitle('THÔNG TIN PHÒNG'),
-              _buildRoomInfoItem('Số phòng', '10'),
-              _buildRoomInfoItem('Loại phòng', 'Có điều hoà'),
-              _buildRoomInfoItem('Số người ở', '02'),
-              _buildRoomInfoItem('Phí', 'VNĐ 1.200.000/Phòng'),
-              const SizedBox(height: 24),
-              // Customer Information Section
-              _buildSectionTitle('THÔNG TIN KHÁCH HÀNG'),
-              _buildCustomerInfoItem('Tên', 'Phạm Trung Hiếu'),
-              _buildCustomerInfoItem('Email', 'trunghieu@gmail.com'),
-              _buildCustomerInfoItem('Số điện thoại', '0123456789'),
-              const SizedBox(height: 24),
-              // Booking Time Section
-              _buildSectionTitle('THỜI GIAN ĐẶT PHÒNG'),
-              _buildBookingTimeItem('Check-in', '12:00 Thứ bảy, 19/04/2025'),
-              _buildBookingTimeItem('Check-out', '12:00 Thứ hai, 21/04/2025'),
-              _buildBookingTimeItem('Số ngày ở', '03'),
-              const SizedBox(height: 24),
-              // Payment Section
-              _buildPaymentSection('THANH TOÁN', 'Chuyển khoản'),
-              const SizedBox(height: 32),
-              // Back Button
-              _buildBackButton(context),
-            ],
+          child: Obx(
+            () => controller.isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppBarWidget(),
+                      const SizedBox(height: 16),
+                      // Hotel Name
+                      _buildHotelName(),
+                      const SizedBox(height: 24),
+                      // Room Information Section
+                      _buildSectionTitle('THÔNG TIN PHÒNG'),
+                      _buildRoomInfoItem('Số phòng', '${booking.numOfRoom}'),
+                      _buildRoomInfoItem('Phí',
+                          _currencyFormat.format(booking.lodging?.dayPrice)),
+                      const SizedBox(height: 24),
+                      _buildSectionTitle('THÔNG TIN KHÁCH HÀNG'),
+                      _buildCustomerInfoItem('Tên', '${booking.user?.name}'),
+                      _buildCustomerInfoItem(
+                          'Email', booking.user?.email ?? '--'),
+                      _buildCustomerInfoItem(
+                          'Số điện thoại', booking.user?.phone ?? '--'),
+                      const SizedBox(height: 24),
+                      // Booking Time Section
+                      _buildSectionTitle('THỜI GIAN ĐẶT PHÒNG'),
+                      _buildBookingTimeItem(
+                          'Check-in', '${booking.checkInAt?.toDateString()}'),
+                      _buildBookingTimeItem(
+                          'Check-out', '${booking.checkOutAt?.toDateString()}'),
+                      _buildBookingTimeItem('Số ngày ở',
+                          '${booking.checkInAt != null && booking.checkOutAt != null ? DateTime.fromMillisecondsSinceEpoch(booking.checkOutAt!.toInt()).difference(DateTime.fromMillisecondsSinceEpoch(booking.checkInAt!.toInt())).inDays : 0}'),
+                      const SizedBox(height: 24),
+                      // Payment Section
+                      _buildPaymentSection(
+                          'THANH TOÁN',
+                          booking.isBankTransfer == true
+                              ? 'Chuyển khoản'
+                              : 'Tiền mặt'),
+                      const SizedBox(height: 32),
+                      // Back Button
+                      _buildBackButton(context),
+                    ],
+                  ),
           ),
         ),
       ),

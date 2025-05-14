@@ -1,71 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:heistom/common/data/model/lodging_model.dart';
+import 'package:heistom/common/extensions/num_extensions.dart';
 import 'package:heistom/lodging/presentation/widgets/lodging_list_item_w.dart';
-import 'package:heistom/renter/presentation/pages/homepage.dart';
 
+import '../../../common/domain/entity/lodging_entity.dart';
 import '../../../common/widgets/app_bar.dart';
+import '../controllers/owner_booking_list_c.dart';
+import 'owner_view_detail_booking_page.dart';
 
 class OwnerBookingListPage extends StatelessWidget {
-  const OwnerBookingListPage({super.key});
+  OwnerBookingListPage({super.key});
+
+  final controller = Get.put(OwnerBookingListController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppBarWidget(),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Yêu cầu đặt Homestay',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // TODO: Implement View All action
-                      },
-                      child: const Text(
-                        'Xem tất cả',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  spacing: 12,
-                  children: houses
-                      .map((e) => LodgingListItem(
-                            lodging: e,
-                            showFavorite: false,
-                            lastRow: Text(
-                              'Đặt ngày 20/04/2025',
+        child: Obx(
+          () => controller.isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppBarWidget(),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Yêu cầu đặt Homestay',
                               style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ))
-                      .toList(),
-                )
-              ],
-            ),
-          ),
+                            TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                'Xem tất cả',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Column(
+                          spacing: 12,
+                          children: controller.bookingList
+                              .map((e) => LodgingListItem(
+                                    onTap: () {
+                                      Get.to(() => OwnerViewDetailBookingPage(
+                                            bookingId: e.id ?? '',
+                                          ));
+                                    },
+                                    lodging: e.lodging?.toEntity() ??
+                                        LodgingEntity(),
+                                    showFavorite: false,
+                                    lastRow: Text(
+                                      'Đặt ngày ${e.bookedAt?.toDateString()}',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
         ),
       ),
     );
