@@ -18,7 +18,7 @@ class AppBarWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
-              image: NetworkImage(globalController.user.avatar!),
+              image: NetworkImage(globalController.user.avatar ?? ''),
               fit: BoxFit.cover,
             ),
           ),

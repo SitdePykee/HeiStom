@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$UserModel {
-  String? get id;
+  String? get uuid;
   String? get name;
   String? get email;
   String? get phone;
@@ -37,7 +37,7 @@ mixin _$UserModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is UserModel &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
@@ -48,11 +48,11 @@ mixin _$UserModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, email, phone, avatar, address);
+      Object.hash(runtimeType, uuid, name, email, phone, avatar, address);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
+    return 'UserModel(uuid: $uuid, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
   }
 }
 
@@ -62,7 +62,7 @@ abstract mixin class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl;
   @useResult
   $Res call(
-      {String? id,
+      {String? uuid,
       String? name,
       String? email,
       String? phone,
@@ -82,7 +82,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? uuid = freezed,
     Object? name = freezed,
     Object? email = freezed,
     Object? phone = freezed,
@@ -90,9 +90,9 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? address = freezed,
   }) {
     return _then(_self.copyWith(
-      id: freezed == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+      uuid: freezed == uuid
+          ? _self.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
               as String?,
       name: freezed == name
           ? _self.name
@@ -123,12 +123,17 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
 @JsonSerializable()
 class _UserModel implements UserModel {
   _UserModel(
-      {this.id, this.name, this.email, this.phone, this.avatar, this.address});
+      {this.uuid,
+      this.name,
+      this.email,
+      this.phone,
+      this.avatar,
+      this.address});
   factory _UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
   @override
-  final String? id;
+  final String? uuid;
   @override
   final String? name;
   @override
@@ -160,7 +165,7 @@ class _UserModel implements UserModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _UserModel &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
@@ -171,11 +176,11 @@ class _UserModel implements UserModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, email, phone, avatar, address);
+      Object.hash(runtimeType, uuid, name, email, phone, avatar, address);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
+    return 'UserModel(uuid: $uuid, name: $name, email: $email, phone: $phone, avatar: $avatar, address: $address)';
   }
 }
 
@@ -188,7 +193,7 @@ abstract mixin class _$UserModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {String? uuid,
       String? name,
       String? email,
       String? phone,
@@ -208,7 +213,7 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id = freezed,
+    Object? uuid = freezed,
     Object? name = freezed,
     Object? email = freezed,
     Object? phone = freezed,
@@ -216,9 +221,9 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? address = freezed,
   }) {
     return _then(_UserModel(
-      id: freezed == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+      uuid: freezed == uuid
+          ? _self.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
               as String?,
       name: freezed == name
           ? _self.name

@@ -14,8 +14,8 @@ _LodgingModel _$LodgingModelFromJson(Map<String, dynamic> json) =>
       dayPrice: (json['dayPrice'] as num?)?.toDouble(),
       hourPrice: (json['hourPrice'] as num?)?.toDouble(),
       area: (json['area'] as num?)?.toDouble(),
-      image:
-          (json['image'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      images:
+          (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
       description: json['description'] as String?,
       amenities: (json['amenities'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -43,7 +43,7 @@ Map<String, dynamic> _$LodgingModelToJson(_LodgingModel instance) =>
       'dayPrice': instance.dayPrice,
       'hourPrice': instance.hourPrice,
       'area': instance.area,
-      'image': instance.image,
+      'images': instance.images,
       'description': instance.description,
       'amenities': instance.amenities,
       'rooms': instance.rooms,

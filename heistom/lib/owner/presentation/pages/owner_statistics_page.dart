@@ -1,55 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For date formatting
-import 'package:fl_chart/fl_chart.dart'; // Uncomment if you have fl_chart
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
-// Mock data models (replace with your actual data models)
-class TotalStats {
-  final int bookings;
-  final String timePeriod;
-  final double revenue;
-  final String location;
-
-  TotalStats({
-    required this.bookings,
-    required this.timePeriod,
-    required this.revenue,
-    required this.location,
-  });
-}
-
-class DailyStats {
-  final String locationName;
-  final int bookings;
-  final int roomsBooked;
-  final double revenue;
-  final double previousDayComparisonPercentage;
-
-  DailyStats({
-    required this.locationName,
-    required this.bookings,
-    required this.roomsBooked,
-    required this.revenue,
-    required this.previousDayComparisonPercentage,
-  });
-}
-
-class WeeklyStats {
-  final String locationName;
-  final int bookings;
-  final int roomsBooked;
-  final double revenue;
-  final double previousWeekComparisonPercentage;
-  final List<double> dailyBookingCounts; // For the chart (Mon to Sun)
-
-  WeeklyStats({
-    required this.locationName,
-    required this.bookings,
-    required this.roomsBooked,
-    required this.revenue,
-    required this.previousWeekComparisonPercentage,
-    required this.dailyBookingCounts,
-  });
-}
+import '../controllers/owner_statistics_c.dart';
 
 class OwnerStatisticsPage extends StatefulWidget {
   const OwnerStatisticsPage({super.key});
@@ -59,50 +14,7 @@ class OwnerStatisticsPage extends StatefulWidget {
 }
 
 class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
-  String? _selectedLocation;
-  String? _selectedTimeFilter;
-
-  DateTime _selectedDate = DateTime(2025, 4, 20);
-  DateTime _selectedWeekStartDate = DateTime(2025, 4, 20); // Assuming Monday
-
-  final List<String> _locations = [
-    'Omina Hanoi Hotel & Travel',
-    'Omina Saigon Hotel'
-  ];
-  final List<String> _timeFilters = ['1 tháng', 'Theo ngày', 'Theo tuần'];
-
-  // Mock data - replace with actual data fetching logic
-  TotalStats _totalStats = TotalStats(
-    bookings: 25,
-    timePeriod: '1 tháng',
-    revenue: 300000000,
-    location: 'Omina Hanoi Hotel & Travel',
-  );
-
-  DailyStats _dailyStats = DailyStats(
-    locationName: 'OMINA HANOI HOTEL & TRAVEL',
-    bookings: 3,
-    roomsBooked: 4,
-    revenue: 36000000,
-    previousDayComparisonPercentage: 30,
-  );
-
-  WeeklyStats _weeklyStats = WeeklyStats(
-    locationName: 'OMINA HANOI HOTEL & TRAVEL',
-    bookings: 10,
-    roomsBooked: 14,
-    revenue: 120000000,
-    previousWeekComparisonPercentage: 15,
-    dailyBookingCounts: [
-      1,
-      2,
-      1,
-      0,
-      1,
-      1,
-      4
-    ], // Mon, Tue, Wed, Thu, Fri, Sat, Sun
-  );
+  final controller = Get.put(OwnerStatisticsController());
 
   final NumberFormat _currencyFormat =
       NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
@@ -172,11 +84,12 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildStatsRow('Số lượt đặt phòng', _totalStats.bookings.toString()),
-          _buildStatsRow('Thời gian', _totalStats.timePeriod),
+          _buildStatsRow('Số lượt đặt phòng',
+              controller.totalStats.value?.bookings.toString() ?? '0'),
           _buildStatsRow(
-              'Doanh số', _currencyFormat.format(_totalStats.revenue)),
-          _buildStatsRow('Địa điểm đặt khách', _totalStats.location),
+              'Doanh số',
+              _currencyFormat
+                  .format(controller.totalStats.value?.revenue ?? 0)),
         ],
       ),
     );
@@ -202,6 +115,19 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
           onPressed: () {
             onDateChanged(
                 currentDate.subtract(Duration(days: isWeekly ? 7 : 1)));
+            if (isWeekly) {
+              controller.selectedWeekStartDate.value =
+                  currentDate.subtract(Duration(days: 7));
+              controller.getStats(
+                  type: 'WEEK',
+                  startDate: DateTime.now().millisecondsSinceEpoch);
+            } else {
+              controller.selectedDate.value =
+                  currentDate.subtract(Duration(days: 1));
+              controller.getStats(
+                  type: 'DAY',
+                  startDate: DateTime.now().millisecondsSinceEpoch);
+            }
           },
         ),
         Text(
@@ -213,6 +139,19 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
           icon: const Icon(Icons.chevron_right, size: 30, color: Colors.blue),
           onPressed: () {
             onDateChanged(currentDate.add(Duration(days: isWeekly ? 7 : 1)));
+            if (isWeekly) {
+              controller.selectedWeekStartDate.value =
+                  currentDate.add(Duration(days: 7));
+              controller.getStats(
+                  type: 'WEEK',
+                  startDate: DateTime.now().millisecondsSinceEpoch);
+            } else {
+              controller.selectedDate.value =
+                  currentDate.add(Duration(days: 1));
+              controller.getStats(
+                  type: 'DAY',
+                  startDate: DateTime.now().millisecondsSinceEpoch);
+            }
           },
         ),
       ],
@@ -225,152 +164,157 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDateNavigator(_selectedDate, (newDate) {
-            setState(() {
-              _selectedDate = newDate;
-            });
+          _buildDateNavigator(controller.selectedDate.value, (newDate) {
+            controller.selectedDate.value = newDate;
           }),
           const SizedBox(height: 16),
           Text(
-            _dailyStats.locationName,
+            controller.selectedLocation.value?.name ?? '',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildStatsRow('Số lượt đặt phòng', _dailyStats.bookings.toString()),
-          _buildStatsRow('Số phòng đặt', _dailyStats.roomsBooked.toString()),
+          _buildStatsRow('Số lượt đặt phòng',
+              controller.dailyStats.value?.bookings.toString() ?? '0'),
           _buildStatsRow(
-              'Doanh số', _currencyFormat.format(_dailyStats.revenue)),
-          _buildStatsRow(
-            'So với ngày trước',
-            '+${_dailyStats.previousDayComparisonPercentage.toStringAsFixed(0)}%',
-            valueColor: Colors.green,
-          ),
+              'Doanh số',
+              _currencyFormat
+                  .format(controller.dailyStats.value?.revenue ?? 0)),
         ],
       ),
     );
   }
 
   Widget _buildWeeklyStatsView() {
-    Widget actualChart = SizedBox(
-      height: 200,
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: _weeklyStats.dailyBookingCounts.isNotEmpty
-              ? _weeklyStats.dailyBookingCounts
-                      .reduce((a, b) => a > b ? a : b) +
-                  1.0 // Ensure double
-              : 5.0, // Ensure double and provide a default if empty
-          barTouchData: BarTouchData(enabled: false),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (double value, TitleMeta meta) {
-                  const style = TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  );
-                  String text;
-                  switch (value.toInt()) {
-                    case 0:
-                      text = 'Mon';
-                      break;
-                    case 1:
-                      text = 'Tue';
-                      break;
-                    case 2:
-                      text = 'Wed';
-                      break;
-                    case 3:
-                      text = 'Thu';
-                      break;
-                    case 4:
-                      text = 'Fri';
-                      break;
-                    case 5:
-                      text = 'Sat';
-                      break;
-                    case 6:
-                      text = 'Sun';
-                      break;
-                    default:
-                      text = '';
-                      break;
-                  }
-                  return SideTitleWidget(
-                      space: 4.0,
-                      meta: TitleMeta(
-                          min: 0,
-                          max: 10,
-                          parentAxisSize: 10,
-                          axisPosition: 10,
-                          appliedInterval: 10,
-                          sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 28,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                return Text(value.toInt().toString(),
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                    textAlign: TextAlign.left);
-                              }),
-                          rotationQuarterTurns: 10,
-                          formattedValue: '',
-                          axisSide: AxisSide.bottom),
-                      child: Text(text, style: style));
-                },
-                reservedSize: 30,
+    Widget actualChart = LayoutBuilder(
+      builder: (context, constraints) {
+        double width = constraints.maxWidth;
+        double height = width * 0.5; // 2:1 aspect ratio
+        return SizedBox(
+          width: width,
+          height: height,
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: controller.weeklyStats.value?.revenue.isNotEmpty ?? false
+                  ? (controller.weeklyStats.value!.revenue.values.reduce(
+                              (a, b) => a > b ? a / 1000000.0 : b / 1000000.0) +
+                          1.0)
+                      .ceilToDouble() // Ensure double
+                  : 5.0, // Ensure double and provide a default if empty
+              barTouchData: BarTouchData(enabled: false),
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (double value, TitleMeta meta) {
+                      const style = TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      );
+                      String text;
+                      switch (value.toInt()) {
+                        case 0:
+                          text = 'Mon';
+                          break;
+                        case 1:
+                          text = 'Tue';
+                          break;
+                        case 2:
+                          text = 'Wed';
+                          break;
+                        case 3:
+                          text = 'Thu';
+                          break;
+                        case 4:
+                          text = 'Fri';
+                          break;
+                        case 5:
+                          text = 'Sat';
+                          break;
+                        case 6:
+                          text = 'Sun';
+                          break;
+                        default:
+                          text = '';
+                          break;
+                      }
+                      return SideTitleWidget(
+                          space: 4.0,
+                          meta: TitleMeta(
+                              min: 0,
+                              max: 10,
+                              parentAxisSize: 10,
+                              axisPosition: 10,
+                              appliedInterval: 10,
+                              sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 28,
+                                  interval: 1,
+                                  getTitlesWidget: (value, meta) {
+                                    return Text(value.toInt().toString(),
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 12),
+                                        textAlign: TextAlign.left);
+                                  }),
+                              rotationQuarterTurns: 10,
+                              formattedValue: '',
+                              axisSide: AxisSide.bottom),
+                          child: Text(text, style: style));
+                    },
+                    reservedSize: 30,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 28,
+                      interval: 10,
+                      getTitlesWidget: (value, meta) {
+                        if (value == 0 || value == meta.max) return Container();
+                        if (value % 1 != 0 && value != meta.max)
+                          return Container(); // Show only integer values, allow max if not int
+                        return Text(value.toInt().toString(),
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            textAlign: TextAlign.left);
+                      }),
+                ),
+                topTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
+              borderData: FlBorderData(show: false),
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                      color: Colors.grey.shade300,
+                      strokeWidth: 1,
+                      dashArray: [3, 3]);
+                },
+                horizontalInterval: 1,
+              ),
+              barGroups: controller.weeklyStats.value!.revenue.entries
+                  .mapIndexed((index, entry) {
+                return BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: entry.value / 1000000.0,
+                      color: Colors.blue,
+                      width: 8,
+                      borderRadius: BorderRadius.circular(4),
+                    )
+                  ],
+                );
+              }).toList(),
             ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 28,
-                  interval: 1,
-                  getTitlesWidget: (value, meta) {
-                    if (value == 0 || value == meta.max) return Container();
-                    if (value % 1 != 0 && value != meta.max)
-                      return Container(); // Show only integer values, allow max if not int
-                    return Text(value.toInt().toString(),
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                        textAlign: TextAlign.left);
-                  }),
-            ),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
-          borderData: FlBorderData(show: false),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                  color: Colors.grey.shade300,
-                  strokeWidth: 1,
-                  dashArray: [3, 3]);
-            },
-            horizontalInterval: 1,
-          ),
-          barGroups:
-              _weeklyStats.dailyBookingCounts.asMap().entries.map((entry) {
-            return BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: entry.value,
-                  color: Colors.blue,
-                  width: 16,
-                  borderRadius: BorderRadius.circular(4),
-                )
-              ],
-            );
-          }).toList(),
-        ),
-      ),
+        );
+      },
     );
 
     return Padding(
@@ -378,27 +322,28 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDateNavigator(_selectedWeekStartDate, (newDate) {
-            setState(() {
-              _selectedWeekStartDate = newDate;
-              // Fetch new weekly stats
-            });
+          _buildDateNavigator(controller.selectedWeekStartDate.value,
+              (newDate) {
+            controller.selectedWeekStartDate.value = newDate;
+            controller.getStats(
+                type: 'WEEK',
+                startDate: controller
+                    .selectedWeekStartDate.value.millisecondsSinceEpoch);
           }, isWeekly: true),
           const SizedBox(height: 16),
           Text(
-            _weeklyStats.locationName,
+            controller.selectedLocation.value?.name ?? '',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildStatsRow('Số lượt đặt phòng', _weeklyStats.bookings.toString()),
-          _buildStatsRow('Số phòng đặt', _weeklyStats.roomsBooked.toString()),
+          _buildStatsRow('Số lượt đặt phòng',
+              controller.weeklyStats.value?.bookings.toString() ?? '0'),
           _buildStatsRow(
-              'Doanh số', _currencyFormat.format(_weeklyStats.revenue)),
-          _buildStatsRow(
-            'So với tuần trước', // Corrected label
-            '+${_weeklyStats.previousWeekComparisonPercentage.toStringAsFixed(0)}%',
-            valueColor: Colors.green,
-          ),
+              'Doanh số',
+              _currencyFormat.format(controller
+                      .weeklyStats.value?.revenue.values
+                      .reduce((a, b) => a + b) ??
+                  0)),
           const SizedBox(height: 24),
           actualChart, // Use the actual chart widget
         ],
@@ -407,12 +352,11 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
   }
 
   Widget _buildContent() {
-    if (_selectedTimeFilter == 'Theo ngày') {
+    if (controller.selectedTimeFilter.value == 'Theo ngày') {
       return _buildDailyStatsView();
-    } else if (_selectedTimeFilter == 'Theo tuần') {
+    } else if (controller.selectedTimeFilter.value == 'Theo tuần') {
       return _buildWeeklyStatsView();
     }
-    // Default to total stats or if '1 tháng' is selected (assuming '1 tháng' means total for simplicity here)
     return _buildTotalStatsView();
   }
 
@@ -430,39 +374,54 @@ class _OwnerStatisticsPageState extends State<OwnerStatisticsPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildDropdown(
-              hintText: 'Chọn địa điểm',
-              value: _selectedLocation,
-              items: _locations,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedLocation = newValue;
-                  // Fetch data based on new location and current time filter
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            _buildDropdown(
-              hintText: 'Chọn thời gian',
-              value: _selectedTimeFilter,
-              items: _timeFilters,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedTimeFilter = newValue;
-                  // Reset dates or fetch data based on new time filter
-                  if (newValue == 'Theo ngày') {
-                    _selectedDate = DateTime(2025, 4, 20);
-                  } else if (newValue == 'Theo tuần') {
-                    _selectedWeekStartDate = DateTime(2025, 4, 20);
-                  }
-                });
-              },
-            ),
-            const SizedBox(height: 24),
-            _buildContent(),
-          ],
+        child: Obx(
+          () => controller.isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    _buildDropdown(
+                      hintText: 'Chọn địa điểm',
+                      value:
+                          '${controller.selectedLocation.value?.name ?? ''} - ${controller.selectedLocation.value?.address ?? ''}',
+                      items: controller.locations
+                          .map((e) => '${e.name ?? ''} - ${e.address ?? ''}')
+                          .toSet()
+                          .toList(),
+                      onChanged: (newValue) {
+                        controller.selectedLocation.value = controller.locations
+                            .firstWhere((e) =>
+                                ('${e.name ?? ''} - ${e.address ?? ''}') ==
+                                newValue);
+                        controller.getStats(
+                            type: 'TOTAL',
+                            startDate: DateTime.now().millisecondsSinceEpoch);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildDropdown(
+                      hintText: 'Chọn thời gian',
+                      value: controller.selectedTimeFilter.value,
+                      items: controller.timeFilters.toSet().toList(),
+                      onChanged: (newValue) {
+                        controller.selectedTimeFilter.value = newValue ?? '';
+                        if (newValue == 'Theo ngày') {
+                          controller.selectedDate.value = DateTime(2025, 4, 20);
+                          controller.getStats(
+                              type: 'DAY',
+                              startDate: DateTime.now().millisecondsSinceEpoch);
+                        } else if (newValue == 'Theo tuần') {
+                          controller.selectedWeekStartDate.value =
+                              DateTime(2025, 4, 20);
+                          controller.getStats(
+                              type: 'WEEK',
+                              startDate: DateTime.now().millisecondsSinceEpoch);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    _buildContent(),
+                  ],
+                ),
         ),
       ),
     );

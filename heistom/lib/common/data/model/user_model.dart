@@ -8,7 +8,7 @@ part 'user_model.freezed.dart';
 sealed class UserModel with _$UserModel {
   @JsonSerializable()
   factory UserModel({
-    String? id,
+    String? uuid,
     String? name,
     String? email,
     String? phone,
@@ -22,7 +22,7 @@ sealed class UserModel with _$UserModel {
 
 extension UserModelX on UserModel {
   UserEntity toEntity() => UserEntity(
-        id: id,
+        id: uuid,
         name: name,
         email: email,
         phone: phone,

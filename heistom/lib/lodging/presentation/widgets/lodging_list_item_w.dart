@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
 
@@ -36,8 +38,13 @@ class LodgingListItem extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      (lodging.image ?? []).first,
+                    child: Image.file(
+                      File((lodging.image ?? []).firstOrNull ?? ''),
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.black26,
+                      ),
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,

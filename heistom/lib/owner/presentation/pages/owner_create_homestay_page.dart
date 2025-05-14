@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../common/global_controller.dart';
 import '../../../common/widgets/app_bar.dart';
+import '../controllers/owner_create_homestay_c.dart';
 
 class OwnerCreateHomestayPage extends StatefulWidget {
   const OwnerCreateHomestayPage({super.key});
@@ -16,14 +17,24 @@ class OwnerCreateHomestayPage extends StatefulWidget {
 }
 
 class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
+  final controller = Get.put(OwnerCreateHomestayController());
+
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
-  final _roomCountController = TextEditingController();
   final _roomAreaController = TextEditingController();
-  final _priceController = TextEditingController();
+  final _dayPriceController = TextEditingController();
+  final _hourPriceController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  // Add new controllers for rooms
+  List<Map<String, TextEditingController>> _roomControllers = [
+    {
+      'roomName': TextEditingController(),
+      'capacity': TextEditingController(),
+    }
+  ];
 
   bool _wifiSelected = true;
   bool _breakfastSelected = false;
@@ -53,11 +64,36 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
     // Dispose controllers
     _nameController.dispose();
     _addressController.dispose();
-    _roomCountController.dispose();
     _roomAreaController.dispose();
-    _priceController.dispose();
+    _dayPriceController.dispose();
+    _hourPriceController.dispose();
     _descriptionController.dispose();
+
+    // Dispose room controllers
+    for (var room in _roomControllers) {
+      room['roomName']?.dispose();
+      room['capacity']?.dispose();
+    }
     super.dispose();
+  }
+
+  void _addRoom() {
+    setState(() {
+      _roomControllers.add({
+        'roomName': TextEditingController(),
+        'capacity': TextEditingController(),
+      });
+    });
+  }
+
+  void _removeRoom(int index) {
+    if (_roomControllers.length > 1) {
+      setState(() {
+        _roomControllers[index]['roomName']?.dispose();
+        _roomControllers[index]['capacity']?.dispose();
+        _roomControllers.removeAt(index);
+      });
+    }
   }
 
   @override
@@ -89,35 +125,39 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Gather data
+                    final globalController = Get.find<GlobalController>();
                     Map<String, dynamic> formData = {
-                      'homestayName': _nameController.text,
+                      'name': _nameController.text,
                       'address': _addressController.text,
-                      'roomCount': _roomCountController.text,
-                      'roomArea': _roomAreaController.text,
-                      'price': _priceController.text,
+                      'area': _roomAreaController.text,
+                      'dayPrice': double.parse(_dayPriceController.text),
+                      'hourPrice': double.parse(_hourPriceController.text),
                       'description': _descriptionController.text,
-                      'amenities': {
-                        'wifi': _wifiSelected,
-                        'breakfast': _breakfastSelected,
-                        'gym': _gymSelected,
-                        'childFriendly': _childFriendlySelected,
-                        'parking': _parkingSelected,
-                        'petsAllowed': _petsAllowedSelected,
-                        'ac': _acSelected,
-                        'pool': _poolSelected,
-                        'bar': _barSelected,
-                        'privateDining': _privateDiningSelected,
-                      },
-                      'imagePaths':
-                          _imageFiles.map((file) => file.path).toList(),
+                      'ownerId': globalController.user.id ?? '',
+                      'amenities': [
+                        if (_wifiSelected) 'free_wifi',
+                        if (_breakfastSelected) 'free_breakfast',
+                        if (_gymSelected) 'gym',
+                        if (_childFriendlySelected) 'children_friendly',
+                        if (_parkingSelected) 'free_parking',
+                        if (_petsAllowedSelected) 'pet_friendly',
+                        if (_acSelected) 'air_conditioning',
+                        if (_poolSelected) 'swimming_pool',
+                        if (_barSelected) 'bar',
+                        if (_privateDiningSelected) 'private_dining_room',
+                      ],
+                      'images': _imageFiles.map((file) => file.path).toList(),
+                      'rooms': _roomControllers
+                          .map((room) => {
+                                'roomName':
+                                    int.parse(room['roomName']?.text ?? '0'),
+                                'capacity':
+                                    int.parse(room['capacity']?.text ?? '0'),
+                              })
+                          .toList(),
                     };
 
-                    // Convert to JSON and print
-                    String jsonData = jsonEncode(formData);
-                    // ignore: avoid_print
-                    print('Form Data JSON: $jsonData');
-
-                    // Handle submit (e.g., send data to backend)
+                    controller.createLodging(formData);
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -201,23 +241,25 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
                 _buildTextField(
                     label: 'Địa chỉ', controller: _addressController),
                 _buildTextField(
-                    label: 'Số lượng phòng',
-                    keyboardType: TextInputType.number,
-                    controller: _roomCountController),
-                _buildTextField(
                     label: 'Diện tích phòng',
                     keyboardType: TextInputType.number,
                     controller: _roomAreaController),
                 _buildTextField(
-                    label: 'Giá thuê gốc',
+                    label: 'Giá thuê theo ngày',
                     keyboardType: TextInputType.number,
-                    controller: _priceController),
+                    controller: _dayPriceController),
+                _buildTextField(
+                    label: 'Giá thuê theo giờ',
+                    keyboardType: TextInputType.number,
+                    controller: _hourPriceController),
                 _buildTextField(
                     label: 'Mô tả chi tiết',
                     maxLines: 3,
                     controller: _descriptionController),
                 const SizedBox(height: 10),
                 _buildAmenitiesSection(),
+                const SizedBox(height: 20),
+                _buildRoomsSection(),
                 const SizedBox(height: 30),
               ],
             ),
@@ -368,6 +410,79 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
       controlAffinity: ListTileControlAffinity.leading,
       activeColor: Colors.blue[600],
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+    );
+  }
+
+  Widget _buildRoomsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Thông tin phòng',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: _addRoom,
+              icon: const Icon(Icons.add),
+              label: const Text('Thêm phòng'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue[600],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        ...List.generate(_roomControllers.length, (index) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Phòng số ${index + 1}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (_roomControllers.length > 1)
+                      IconButton(
+                        icon:
+                            const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () => _removeRoom(index),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _buildTextField(
+                  label: 'Tên phòng',
+                  controller: _roomControllers[index]['roomName'],
+                ),
+                _buildTextField(
+                  label: 'Số người tối đa',
+                  keyboardType: TextInputType.number,
+                  controller: _roomControllers[index]['capacity'],
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 }
