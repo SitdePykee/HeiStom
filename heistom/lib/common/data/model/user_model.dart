@@ -11,9 +11,10 @@ sealed class UserModel with _$UserModel {
     String? uuid,
     String? name,
     String? email,
-    String? phone,
+    String? phoneNumber,
     String? avatar,
     String? address,
+    String? type
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -25,8 +26,9 @@ extension UserModelX on UserModel {
         id: uuid,
         name: name,
         email: email,
-        phone: phone,
+        phone: phoneNumber,
         avatar: avatar,
         address: address,
+        role: type
       );
 }

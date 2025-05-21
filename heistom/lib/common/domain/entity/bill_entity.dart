@@ -4,24 +4,22 @@ import 'package:heistom/common/domain/entity/user_entity.dart';
 
 class BillEntity {
   String? id;
-  LodgingEntity? lodging;
-  UserEntity? user;
+  String? lodgingID;
+  String? user;
   int? numberOfPeople;
   List<RoomEntity>? room;
   num? checkInDate;
   num? checkOutDate;
-  double? totalPrice;
   String? paymentMethod;
 
   BillEntity({
     this.id,
-    this.lodging,
+    this.lodgingID,
     this.user,
     this.numberOfPeople,
     this.room,
     this.checkInDate,
     this.checkOutDate,
-    this.totalPrice,
     this.paymentMethod,
   });
 }

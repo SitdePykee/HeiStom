@@ -16,14 +16,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BillModel {
   String? get id;
-  LodgingModel? get lodging;
-  UserModel? get user;
+  String? get lodgingId;
+  String? get userID;
   int? get numberOfPeople;
-  List<RoomModel>? get room;
-  num? get checkInDate;
-  num? get checkOutDate;
-  double? get totalPrice;
-  String? get paymentMethod;
+  List<RoomModel>? get rooms;
+  num? get checkInAt;
+  num? get checkOutAt;
+  bool? get isBankTransfer;
 
   /// Create a copy of BillModel
   /// with the given fields replaced by the non-null parameter values.
@@ -41,19 +40,18 @@ mixin _$BillModel {
         (other.runtimeType == runtimeType &&
             other is BillModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.lodging, lodging) || other.lodging == lodging) &&
-            (identical(other.user, user) || other.user == user) &&
+            (identical(other.lodgingId, lodgingId) ||
+                other.lodgingId == lodgingId) &&
+            (identical(other.userID, userID) || other.userID == userID) &&
             (identical(other.numberOfPeople, numberOfPeople) ||
                 other.numberOfPeople == numberOfPeople) &&
-            const DeepCollectionEquality().equals(other.room, room) &&
-            (identical(other.checkInDate, checkInDate) ||
-                other.checkInDate == checkInDate) &&
-            (identical(other.checkOutDate, checkOutDate) ||
-                other.checkOutDate == checkOutDate) &&
-            (identical(other.totalPrice, totalPrice) ||
-                other.totalPrice == totalPrice) &&
-            (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+            const DeepCollectionEquality().equals(other.rooms, rooms) &&
+            (identical(other.checkInAt, checkInAt) ||
+                other.checkInAt == checkInAt) &&
+            (identical(other.checkOutAt, checkOutAt) ||
+                other.checkOutAt == checkOutAt) &&
+            (identical(other.isBankTransfer, isBankTransfer) ||
+                other.isBankTransfer == isBankTransfer));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -61,18 +59,17 @@ mixin _$BillModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      lodging,
-      user,
+      lodgingId,
+      userID,
       numberOfPeople,
-      const DeepCollectionEquality().hash(room),
-      checkInDate,
-      checkOutDate,
-      totalPrice,
-      paymentMethod);
+      const DeepCollectionEquality().hash(rooms),
+      checkInAt,
+      checkOutAt,
+      isBankTransfer);
 
   @override
   String toString() {
-    return 'BillModel(id: $id, lodging: $lodging, user: $user, numberOfPeople: $numberOfPeople, room: $room, checkInDate: $checkInDate, checkOutDate: $checkOutDate, totalPrice: $totalPrice, paymentMethod: $paymentMethod)';
+    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, numberOfPeople: $numberOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
   }
 }
 
@@ -83,17 +80,13 @@ abstract mixin class $BillModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      LodgingModel? lodging,
-      UserModel? user,
+      String? lodgingId,
+      String? userID,
       int? numberOfPeople,
-      List<RoomModel>? room,
-      num? checkInDate,
-      num? checkOutDate,
-      double? totalPrice,
-      String? paymentMethod});
-
-  $LodgingModelCopyWith<$Res>? get lodging;
-  $UserModelCopyWith<$Res>? get user;
+      List<RoomModel>? rooms,
+      num? checkInAt,
+      num? checkOutAt,
+      bool? isBankTransfer});
 }
 
 /// @nodoc
@@ -109,81 +102,48 @@ class _$BillModelCopyWithImpl<$Res> implements $BillModelCopyWith<$Res> {
   @override
   $Res call({
     Object? id = freezed,
-    Object? lodging = freezed,
-    Object? user = freezed,
+    Object? lodgingId = freezed,
+    Object? userID = freezed,
     Object? numberOfPeople = freezed,
-    Object? room = freezed,
-    Object? checkInDate = freezed,
-    Object? checkOutDate = freezed,
-    Object? totalPrice = freezed,
-    Object? paymentMethod = freezed,
+    Object? rooms = freezed,
+    Object? checkInAt = freezed,
+    Object? checkOutAt = freezed,
+    Object? isBankTransfer = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      lodging: freezed == lodging
-          ? _self.lodging
-          : lodging // ignore: cast_nullable_to_non_nullable
-              as LodgingModel?,
-      user: freezed == user
-          ? _self.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserModel?,
+      lodgingId: freezed == lodgingId
+          ? _self.lodgingId
+          : lodgingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userID: freezed == userID
+          ? _self.userID
+          : userID // ignore: cast_nullable_to_non_nullable
+              as String?,
       numberOfPeople: freezed == numberOfPeople
           ? _self.numberOfPeople
           : numberOfPeople // ignore: cast_nullable_to_non_nullable
               as int?,
-      room: freezed == room
-          ? _self.room
-          : room // ignore: cast_nullable_to_non_nullable
+      rooms: freezed == rooms
+          ? _self.rooms
+          : rooms // ignore: cast_nullable_to_non_nullable
               as List<RoomModel>?,
-      checkInDate: freezed == checkInDate
-          ? _self.checkInDate
-          : checkInDate // ignore: cast_nullable_to_non_nullable
+      checkInAt: freezed == checkInAt
+          ? _self.checkInAt
+          : checkInAt // ignore: cast_nullable_to_non_nullable
               as num?,
-      checkOutDate: freezed == checkOutDate
-          ? _self.checkOutDate
-          : checkOutDate // ignore: cast_nullable_to_non_nullable
+      checkOutAt: freezed == checkOutAt
+          ? _self.checkOutAt
+          : checkOutAt // ignore: cast_nullable_to_non_nullable
               as num?,
-      totalPrice: freezed == totalPrice
-          ? _self.totalPrice
-          : totalPrice // ignore: cast_nullable_to_non_nullable
-              as double?,
-      paymentMethod: freezed == paymentMethod
-          ? _self.paymentMethod
-          : paymentMethod // ignore: cast_nullable_to_non_nullable
-              as String?,
+      isBankTransfer: freezed == isBankTransfer
+          ? _self.isBankTransfer
+          : isBankTransfer // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
-  }
-
-  /// Create a copy of BillModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $LodgingModelCopyWith<$Res>? get lodging {
-    if (_self.lodging == null) {
-      return null;
-    }
-
-    return $LodgingModelCopyWith<$Res>(_self.lodging!, (value) {
-      return _then(_self.copyWith(lodging: value));
-    });
-  }
-
-  /// Create a copy of BillModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res>? get user {
-    if (_self.user == null) {
-      return null;
-    }
-
-    return $UserModelCopyWith<$Res>(_self.user!, (value) {
-      return _then(_self.copyWith(user: value));
-    });
   }
 }
 
@@ -192,44 +152,41 @@ class _$BillModelCopyWithImpl<$Res> implements $BillModelCopyWith<$Res> {
 class _BillModel implements BillModel {
   _BillModel(
       {this.id,
-      this.lodging,
-      this.user,
+      this.lodgingId,
+      this.userID,
       this.numberOfPeople,
-      final List<RoomModel>? room,
-      this.checkInDate,
-      this.checkOutDate,
-      this.totalPrice,
-      this.paymentMethod})
-      : _room = room;
+      final List<RoomModel>? rooms,
+      this.checkInAt,
+      this.checkOutAt,
+      this.isBankTransfer})
+      : _rooms = rooms;
   factory _BillModel.fromJson(Map<String, dynamic> json) =>
       _$BillModelFromJson(json);
 
   @override
   final String? id;
   @override
-  final LodgingModel? lodging;
+  final String? lodgingId;
   @override
-  final UserModel? user;
+  final String? userID;
   @override
   final int? numberOfPeople;
-  final List<RoomModel>? _room;
+  final List<RoomModel>? _rooms;
   @override
-  List<RoomModel>? get room {
-    final value = _room;
+  List<RoomModel>? get rooms {
+    final value = _rooms;
     if (value == null) return null;
-    if (_room is EqualUnmodifiableListView) return _room;
+    if (_rooms is EqualUnmodifiableListView) return _rooms;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
-  final num? checkInDate;
+  final num? checkInAt;
   @override
-  final num? checkOutDate;
+  final num? checkOutAt;
   @override
-  final double? totalPrice;
-  @override
-  final String? paymentMethod;
+  final bool? isBankTransfer;
 
   /// Create a copy of BillModel
   /// with the given fields replaced by the non-null parameter values.
@@ -252,19 +209,18 @@ class _BillModel implements BillModel {
         (other.runtimeType == runtimeType &&
             other is _BillModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.lodging, lodging) || other.lodging == lodging) &&
-            (identical(other.user, user) || other.user == user) &&
+            (identical(other.lodgingId, lodgingId) ||
+                other.lodgingId == lodgingId) &&
+            (identical(other.userID, userID) || other.userID == userID) &&
             (identical(other.numberOfPeople, numberOfPeople) ||
                 other.numberOfPeople == numberOfPeople) &&
-            const DeepCollectionEquality().equals(other._room, _room) &&
-            (identical(other.checkInDate, checkInDate) ||
-                other.checkInDate == checkInDate) &&
-            (identical(other.checkOutDate, checkOutDate) ||
-                other.checkOutDate == checkOutDate) &&
-            (identical(other.totalPrice, totalPrice) ||
-                other.totalPrice == totalPrice) &&
-            (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+            const DeepCollectionEquality().equals(other._rooms, _rooms) &&
+            (identical(other.checkInAt, checkInAt) ||
+                other.checkInAt == checkInAt) &&
+            (identical(other.checkOutAt, checkOutAt) ||
+                other.checkOutAt == checkOutAt) &&
+            (identical(other.isBankTransfer, isBankTransfer) ||
+                other.isBankTransfer == isBankTransfer));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -272,18 +228,17 @@ class _BillModel implements BillModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      lodging,
-      user,
+      lodgingId,
+      userID,
       numberOfPeople,
-      const DeepCollectionEquality().hash(_room),
-      checkInDate,
-      checkOutDate,
-      totalPrice,
-      paymentMethod);
+      const DeepCollectionEquality().hash(_rooms),
+      checkInAt,
+      checkOutAt,
+      isBankTransfer);
 
   @override
   String toString() {
-    return 'BillModel(id: $id, lodging: $lodging, user: $user, numberOfPeople: $numberOfPeople, room: $room, checkInDate: $checkInDate, checkOutDate: $checkOutDate, totalPrice: $totalPrice, paymentMethod: $paymentMethod)';
+    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, numberOfPeople: $numberOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
   }
 }
 
@@ -297,19 +252,13 @@ abstract mixin class _$BillModelCopyWith<$Res>
   @useResult
   $Res call(
       {String? id,
-      LodgingModel? lodging,
-      UserModel? user,
+      String? lodgingId,
+      String? userID,
       int? numberOfPeople,
-      List<RoomModel>? room,
-      num? checkInDate,
-      num? checkOutDate,
-      double? totalPrice,
-      String? paymentMethod});
-
-  @override
-  $LodgingModelCopyWith<$Res>? get lodging;
-  @override
-  $UserModelCopyWith<$Res>? get user;
+      List<RoomModel>? rooms,
+      num? checkInAt,
+      num? checkOutAt,
+      bool? isBankTransfer});
 }
 
 /// @nodoc
@@ -325,81 +274,48 @@ class __$BillModelCopyWithImpl<$Res> implements _$BillModelCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = freezed,
-    Object? lodging = freezed,
-    Object? user = freezed,
+    Object? lodgingId = freezed,
+    Object? userID = freezed,
     Object? numberOfPeople = freezed,
-    Object? room = freezed,
-    Object? checkInDate = freezed,
-    Object? checkOutDate = freezed,
-    Object? totalPrice = freezed,
-    Object? paymentMethod = freezed,
+    Object? rooms = freezed,
+    Object? checkInAt = freezed,
+    Object? checkOutAt = freezed,
+    Object? isBankTransfer = freezed,
   }) {
     return _then(_BillModel(
       id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      lodging: freezed == lodging
-          ? _self.lodging
-          : lodging // ignore: cast_nullable_to_non_nullable
-              as LodgingModel?,
-      user: freezed == user
-          ? _self.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserModel?,
+      lodgingId: freezed == lodgingId
+          ? _self.lodgingId
+          : lodgingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userID: freezed == userID
+          ? _self.userID
+          : userID // ignore: cast_nullable_to_non_nullable
+              as String?,
       numberOfPeople: freezed == numberOfPeople
           ? _self.numberOfPeople
           : numberOfPeople // ignore: cast_nullable_to_non_nullable
               as int?,
-      room: freezed == room
-          ? _self._room
-          : room // ignore: cast_nullable_to_non_nullable
+      rooms: freezed == rooms
+          ? _self._rooms
+          : rooms // ignore: cast_nullable_to_non_nullable
               as List<RoomModel>?,
-      checkInDate: freezed == checkInDate
-          ? _self.checkInDate
-          : checkInDate // ignore: cast_nullable_to_non_nullable
+      checkInAt: freezed == checkInAt
+          ? _self.checkInAt
+          : checkInAt // ignore: cast_nullable_to_non_nullable
               as num?,
-      checkOutDate: freezed == checkOutDate
-          ? _self.checkOutDate
-          : checkOutDate // ignore: cast_nullable_to_non_nullable
+      checkOutAt: freezed == checkOutAt
+          ? _self.checkOutAt
+          : checkOutAt // ignore: cast_nullable_to_non_nullable
               as num?,
-      totalPrice: freezed == totalPrice
-          ? _self.totalPrice
-          : totalPrice // ignore: cast_nullable_to_non_nullable
-              as double?,
-      paymentMethod: freezed == paymentMethod
-          ? _self.paymentMethod
-          : paymentMethod // ignore: cast_nullable_to_non_nullable
-              as String?,
+      isBankTransfer: freezed == isBankTransfer
+          ? _self.isBankTransfer
+          : isBankTransfer // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
-  }
-
-  /// Create a copy of BillModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $LodgingModelCopyWith<$Res>? get lodging {
-    if (_self.lodging == null) {
-      return null;
-    }
-
-    return $LodgingModelCopyWith<$Res>(_self.lodging!, (value) {
-      return _then(_self.copyWith(lodging: value));
-    });
-  }
-
-  /// Create a copy of BillModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res>? get user {
-    if (_self.user == null) {
-      return null;
-    }
-
-    return $UserModelCopyWith<$Res>(_self.user!, (value) {
-      return _then(_self.copyWith(user: value));
-    });
   }
 }
 

@@ -9,7 +9,12 @@ import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/owner/presentation/detail_owner_page.dart';
 import 'package:heistom/owner/presentation/pages/owner_create_homestay_page.dart';
 import 'package:heistom/owner/presentation/pages/owner_home_page.dart';
+import 'package:heistom/renter/data/bill_repository.dart';
+import 'package:heistom/renter/data/search_repository.dart';
+import 'package:heistom/renter/presentation/controllers/bill_controller.dart';
+import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 import 'package:heistom/renter/presentation/pages/booked_homestay_page.dart';
+import 'package:heistom/renter/presentation/pages/detail_renter_page.dart';
 import 'package:heistom/renter/presentation/pages/favorited_homestay_page.dart';
 import 'package:heistom/renter/presentation/pages/homepage.dart';
 
@@ -20,6 +25,11 @@ import 'owner/presentation/pages/owner_statistics_page.dart';
 void main() {
   Get.put(GlobalController());
   Get.put<GlobalController>(GlobalController());
+  
+  Get.put<SearchHouseController>(SearchHouseController());
+  Get.put<SearchRepository>(SearchRepository());
+  Get.put<BillController>(BillController());
+  Get.put<BillRepository>(BillRepository());
   runApp(MainApp());
 }
 
@@ -107,7 +117,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
   Widget _getUserSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-        return OwnerHomePage();
+        return HomePage();
       case 1:
         return FavoritedHomestayPage(
           lodgings: houses,
@@ -117,15 +127,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
           lodgings: houses,
         );
       case 3:
-        return DetailOwnerPage(
-          owner: UserEntity(
-            id: '1',
-            name: 'Owner 1',
-            avatar:
-                'https://sohanews.sohacdn.com/160588918557773824/2025/4/8/elon-musk-2025-worlds-richest-pe-11330752-1744127633018-17441276334511812934978.jpg',
-            phone: '0909090909',
-          ),
-        );
+        return DetailRenterPage(renter: globalController.user);
       default:
         return HomePage();
     }

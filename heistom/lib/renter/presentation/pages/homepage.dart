@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/review_entity.dart';
 import 'package:heistom/common/domain/entity/street_entity.dart';
 import 'package:heistom/common/global_controller.dart';
+import 'package:heistom/renter/data/search_repository.dart';
+import 'package:heistom/renter/data/utils_repository.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 import 'package:heistom/renter/presentation/pages/search_result_page.dart';
 import 'package:heistom/renter/presentation/widgets/choose_amenities_dialog.dart';
@@ -17,21 +19,20 @@ import '../../../common/domain/entity/user_entity.dart';
 
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final GlobalController globalController = Get.find<GlobalController>();
   final SearchHouseController controller = Get.put(SearchHouseController());
+  final SearchRepository searchRepository = Get.find<SearchRepository>();
+  final UtilsRepository utilsRepository = UtilsRepository();
 
-  final List<Map<String, String>> suggestions = [
-    {'name': 'Phố Hàng Bài', 'address': 'Phường Hàng Bài'},
-    {'name': 'Phố Hàng Gà', 'address': 'Phường Cửa Đông'},
-    {
-      'name': 'Hotel de Lagom',
-      'address': '30 B-C-D Lý Nam Đế, phường Cửa Đông'
-    },
-    {'name': 'HN Memori Hotel', 'address': '90 Trần Nhật Duật'},
-  ];
+  final RxList<LodgingEntity> houses = <LodgingEntity>[].obs;
 
   void showAmenitiesDialog() {
     Get.dialog(ChooseAmenitiesDialog());
@@ -54,6 +55,17 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void getLodging() async {
+    final result = await utilsRepository.getLodgings();
+    houses.assignAll(result);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLodging();
   }
 
   @override
@@ -89,7 +101,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  globalController.user.name!,
+                  globalController.user.name ?? '',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -101,29 +113,34 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                child: TypeAheadField<LodgingEntity>(
-                  controller: controller.searchController,
-                  suggestionsCallback: (String search) {
-                    return houses.where((lodging) {
+      body: Obx(() {
+        if (houses.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                  child: TypeAheadField<LodgingEntity>(
+                    controller: controller.searchController,
+                    suggestionsCallback: (String search) {
                       final query = search.toLowerCase();
-                      return lodging.name!.toLowerCase().contains(query) ||
-                          lodging.address!.toLowerCase().contains(query);
-                    }).toList();
-                  },
-                  builder: (context, controller, focusNode) {
-                    return TextField(
-                        controller: controller,
+                      return houses.where((lodging) =>
+  lodging.name!.toLowerCase().contains(query) ||
+  lodging.address!.toLowerCase().contains(query)).toList();
+
+                    },
+                    builder: (context, textController, focusNode) {
+                      return TextField(
+                        controller: textController,
                         focusNode: focusNode,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.location_on_outlined,
                             color: Color(0xff0090FF),
                             size: 30,
@@ -133,153 +150,153 @@ class HomePage extends StatelessWidget {
                             borderSide: BorderSide.none,
                           ),
                           labelText: 'Bạn muốn đi đâu?',
-                        ));
-                  },
-                  itemBuilder: (context, houses) {
-                    return ListTile(
-                      title: Text(houses.name!),
-                      subtitle: Text(houses.address!),
-                      leading: Icon(
-                        Icons.location_on_outlined,
-                      ),
-                    );
-                  },
-                  onSelected: (house) {
-                    controller.searchController.text = house.name!;
-                  },
-                ),
-              ),
-              Obx(() => ListTile(
-                    leading: const Icon(Icons.calendar_today,
-                        color: Color(0xff0090FF)),
-                    title: const Text('Thời gian nhận phòng'),
-                    subtitle: Text(
-                      '${controller.checkInDate.value.day.toString().padLeft(2, '0')}/'
-                      '${controller.checkInDate.value.month.toString().padLeft(2, '0')}/'
-                      '${controller.checkInDate.value.year} '
-                      '${controller.checkInDate.value.hour.toString().padLeft(2, '0')}:'
-                      '${controller.checkInDate.value.minute.toString().padLeft(2, '0')}',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    trailing: const Icon(Icons.arrow_drop_down),
-                    onTap: () {
-                      showCupertinoDatePicker(
-                        context: context,
-                        initialDateTime: controller.checkInDate.value,
-                        onDateTimeChanged: (date) {
-                          controller.checkInDate.value = date;
-                        },
+                        ),
                       );
                     },
-                  )),
-              Obx(() => ListTile(
-                    leading: const Icon(Icons.calendar_today,
-                        color: Color(0xff0090FF)),
-                    title: const Text('Thời gian trả phòng'),
-                    subtitle: Text(
-                      '${controller.checkOutDate.value.day.toString().padLeft(2, '0')}/'
-                      '${controller.checkOutDate.value.month.toString().padLeft(2, '0')}/'
-                      '${controller.checkOutDate.value.year} '
-                      '${controller.checkOutDate.value.hour.toString().padLeft(2, '0')}:'
-                      '${controller.checkOutDate.value.minute.toString().padLeft(2, '0')}',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    trailing: const Icon(Icons.arrow_drop_down),
-                    onTap: () {
-                      showCupertinoDatePicker(
-                        context: context,
-                        initialDateTime: controller.checkOutDate.value,
-                        onDateTimeChanged: (date) {
-                          controller.checkOutDate.value = date;
-                        },
+                    itemBuilder: (context, lodging) {
+                      return ListTile(
+                        title: Text(lodging.name ?? ''),
+                        subtitle: Text(lodging.address ?? ''),
+                        leading: const Icon(Icons.location_on_outlined),
                       );
                     },
-                  )),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Obx(() => CounterTile(
-                          label: 'Người',
-                          value: controller.peopleCount.value,
-                          icon: Icons.people_outline,
-                          onChanged: (newValue) =>
-                              controller.peopleCount.value = newValue,
-                        )),
-                    SizedBox(
-                      height: 40,
-                      child: VerticalDivider(
-                        color: Colors.black54,
-                        width: 1,
-                        thickness: 2,
+                    onSelected: (lodging) {
+                      controller.searchController.text = lodging.name ?? '';
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Obx(() => ListTile(
+                      leading: const Icon(Icons.calendar_today,
+                          color: Color(0xff0090FF)),
+                      title: const Text('Thời gian nhận phòng'),
+                      subtitle: Text(
+                        '${controller.checkInDate.value.day.toString().padLeft(2, '0')}/'
+                        '${controller.checkInDate.value.month.toString().padLeft(2, '0')}/'
+                        '${controller.checkInDate.value.year} '
+                        '${controller.checkInDate.value.hour.toString().padLeft(2, '0')}:'
+                        '${controller.checkInDate.value.minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(color: Colors.black54),
                       ),
-                    ),
-                    Obx(() => CounterTile(
-                          label: 'Phòng',
-                          value: controller.roomCount.value,
-                          icon: Icons.hotel_outlined,
-                          onChanged: (newValue) =>
-                              controller.roomCount.value = newValue,
-                        )),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.list,
-                  color: Color(0xff0090FF),
-                ),
-                title: Text('Chọn tiện ích'),
-                trailing: Icon(Icons.arrow_drop_down),
-                onTap: () {
-                  showAmenitiesDialog();
-                },
-              ),
-              const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Color(0xff0090FF),
-                      Color(0xff00FF94),
+                      trailing: const Icon(Icons.arrow_drop_down),
+                      onTap: () {
+                        showCupertinoDatePicker(
+                          context: context,
+                          initialDateTime: controller.checkInDate.value,
+                          onDateTimeChanged: (date) {
+                            controller.checkInDate.value = date;
+                          },
+                        );
+                      },
+                    )),
+                Obx(() => ListTile(
+                      leading: const Icon(Icons.calendar_today,
+                          color: Color(0xff0090FF)),
+                      title: const Text('Thời gian trả phòng'),
+                      subtitle: Text(
+                        '${controller.checkOutDate.value.day.toString().padLeft(2, '0')}/'
+                        '${controller.checkOutDate.value.month.toString().padLeft(2, '0')}/'
+                        '${controller.checkOutDate.value.year} '
+                        '${controller.checkOutDate.value.hour.toString().padLeft(2, '0')}:'
+                        '${controller.checkOutDate.value.minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(color: Colors.black54),
+                      ),
+                      trailing: const Icon(Icons.arrow_drop_down),
+                      onTap: () {
+                        showCupertinoDatePicker(
+                          context: context,
+                          initialDateTime: controller.checkOutDate.value,
+                          onDateTimeChanged: (date) {
+                            controller.checkOutDate.value = date;
+                          },
+                        );
+                      },
+                    )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Obx(() => CounterTile(
+                            label: 'Người',
+                            value: controller.peopleCount.value,
+                            icon: Icons.people_outline,
+                            onChanged: (newValue) =>
+                                controller.peopleCount.value = newValue,
+                          )),
+                      const SizedBox(
+                        height: 40,
+                        child: VerticalDivider(
+                          color: Colors.black54,
+                          width: 1,
+                          thickness: 2,
+                        ),
+                      ),
+                      Obx(() => CounterTile(
+                            label: 'Phòng',
+                            value: controller.roomCount.value,
+                            icon: Icons.hotel_outlined,
+                            onChanged: (newValue) =>
+                                controller.roomCount.value = newValue,
+                          )),
                     ],
-                    stops: [0.038, 1.2615],
                   ),
-                  borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: TextButton(
-                  onPressed: () {
-                    Get.to(() => SearchResultPage());
+                ListTile(
+                  leading: const Icon(
+                    Icons.list,
+                    color: Color(0xff0090FF),
+                  ),
+                  title: const Text('Chọn tiện ích'),
+                  trailing: const Icon(Icons.arrow_drop_down),
+                  onTap: () {
+                    showAmenitiesDialog();
                   },
-                  child: Text(
-                    'Tìm kiếm',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Color(0xff0090FF), Color(0xff00FF94)],
+                      stops: [0.038, 1.2615],
+                    ),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: TextButton(
+                    onPressed: () async {
+                      controller.results.value = await searchRepository.searchLodgings();
+                      Get.to(() => SearchResultPage());
+                    },
+                    child: const Text(
+                      'Tìm kiếm',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 26),
-              StreetcardView(
-                  title: 'Khu vực đông khách',
-                  onPressed: () {},
-                  streets: streets),
-              const SizedBox(height: 16),
-              HousecardView(
-                onPressed: () {},
-                houses: houses,
-                title: 'Địa điểm hàng đầu',
-                isSearched: false,
-              ),
-            ],
+                const SizedBox(height: 26),
+                StreetcardView(
+                    title: 'Khu vực đông khách',
+                    onPressed: () {},
+                    streets: streets),
+                const SizedBox(height: 16),
+                // HousecardView(
+                //   onPressed: () {},
+                //   houses: houses,
+                //   title: 'Địa điểm hàng đầu',
+                //   isSearched: false,
+                // ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
+
 
 List<ReviewEntity> sampleReviews = [
   ReviewEntity(
@@ -345,146 +362,7 @@ List<ReviewEntity> sampleReviews = [
   ),
 ];
 
-List<LodgingEntity> houses = [
-  LodgingEntity(
-    id: '1',
-    name: 'Omina Hanoi Hotel & Travel',
-    address: '2B Phố Hàng Gà, Quận Hoàn Kiếm, Hà Nội',
-    area: 90,
-    rating: 3.5,
-    reviews: sampleReviews,
-    amenities: [
-      'free_wifi',
-      'gym',
-      'free_breakfast',
-      'children_friendly',
-      'free_parking',
-      'pet_friendly',
-      'air_conditioning',
-      'swimming_pool',
-      'bar',
-      'private_dining_room',
-      'bike_to_airport'
-    ],
-    dayPrice: 100,
-    hourPrice: 2000,
-    image: [
-      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
-      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640',
-      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
-      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640',
-      'https://vanangroup.com.vn/wp-content/uploads/2024/10/29df21cd740c64fda44d8e567685970b-e1729733600172.jpg',
-      'https://cf.bstatic.com/xdata/images/hotel/max1024x768/234762091.jpg?k=45540c95d66e3278d194a4a35994dd3491811d644b2a6cb3e3da1b187dfa7d06&o=&hp=1',
-    ],
-    description:
-        'Khách sạn nằm tại trung tâm Hà Nội, thuận tiện đi lại và có đầy đủ tiện nghi.',
-    owner: UserEntity(
-      id: 'u1',
-      name: 'Nguyễn Văn A',
-      email: 'vana@example.com',
-      phone: '0987654321',
-      avatar: 'assets/images/avatar.png',
-    ),
-    uploadDate: DateTime(2024, 10, 1).millisecondsSinceEpoch,
-    lat: 21.033,
-    lng: 105.848,
-  ),
-  LodgingEntity(
-    id: '2',
-    name: 'Sunrise Da Nang Hotel',
-    address: '123 Nguyễn Văn Thoại, Quận Sơn Trà, Đà Nẵng',
-    area: 120,
-    amenities: ['free_wifi', 'pool', 'gym'],
-    dayPrice: 150,
-    hourPrice: 2500,
-    image: [
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640'
-    ],
-    description: 'Nghỉ dưỡng ven biển với không gian yên tĩnh và hiện đại.',
-    owner: UserEntity(
-      id: 'u2',
-      name: 'Trần Thị B',
-      email: 'tranthib@example.com',
-      phone: '0912345678',
-      avatar: 'assets/images/avatar.png',
-    ),
-    uploadDate: DateTime(2024, 10, 5).millisecondsSinceEpoch,
-    lat: 16.061,
-    lng: 108.237,
-  ),
-  LodgingEntity(
-    id: '3',
-    name: 'Saigon Cozy House',
-    address: '45 Lê Văn Sỹ, Quận 3, TP.HCM',
-    area: 75,
-    amenities: ['free_wifi', 'kitchen', 'parking'],
-    dayPrice: 80,
-    hourPrice: 1800,
-    image: [
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640'
-    ],
-    description: 'Phù hợp cho gia đình hoặc nhóm bạn, gần trung tâm TP.HCM.',
-    owner: UserEntity(
-      id: 'u3',
-      name: 'Lê Quốc C',
-      email: 'lequocc@example.com',
-      phone: '0909123456',
-      avatar: 'assets/images/avatar.png',
-    ),
-    uploadDate: DateTime(2024, 9, 20).millisecondsSinceEpoch,
-    lat: 10.784,
-    lng: 106.690,
-  ),
-  LodgingEntity(
-    id: '4',
-    name: 'The Garden Homestay Hue',
-    address: '25 Nguyễn Huệ, TP. Huế',
-    area: 60,
-    amenities: ['garden', 'wifi', 'breakfast'],
-    dayPrice: 70,
-    hourPrice: 1600,
-    image: [
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640'
-    ],
-    description: 'Homestay có sân vườn thoáng đãng và phong cách cổ kính.',
-    owner: UserEntity(
-      id: 'u4',
-      name: 'Phạm Duy D',
-      email: 'phamduyd@example.com',
-      phone: '0978123456',
-      avatar: 'assets/images/avatar.png',
-    ),
-    uploadDate: DateTime(2024, 8, 15).millisecondsSinceEpoch,
-    lat: 16.462,
-    lng: 107.598,
-  ),
-  LodgingEntity(
-    id: '5',
-    name: 'Mountain View Villa Sapa',
-    address: 'Đồi Mường Hoa, Thị xã Sapa',
-    area: 150,
-    amenities: ['mountain_view', 'fireplace', 'wifi'],
-    dayPrice: 180,
-    hourPrice: 3000,
-    image: [
-      'https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/20027687-898dcd1210075992ae96b15357f919f0.jpeg?_src=imagekit&tr=c-at_max,f-jpg,h-360,pr-true,q-80,w-640'
-    ],
-    description:
-        'Biệt thự nghỉ dưỡng nhìn ra dãy Hoàng Liên Sơn, yên tĩnh và sang trọng.',
-    owner: UserEntity(
-      id: 'u5',
-      name: 'Hoàng Anh E',
-      email: 'hoanganhe@example.com',
-      phone: '0967987654',
-      avatar: 'assets/images/avatar.png',
-    ),
-    uploadDate: DateTime(2024, 7, 10).millisecondsSinceEpoch,
-    lat: 22.336,
-    lng: 103.843,
-  ),
-];
+
 
 final streets = [
   StreetEntity(

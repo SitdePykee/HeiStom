@@ -7,6 +7,7 @@ class RoomEntity {
   final String? status;
   final UserEntity? owner;
   final int? capacity;
+  final String? roomName;
 
   RoomEntity({
     this.id,
@@ -15,5 +16,6 @@ class RoomEntity {
     this.status,
     this.capacity,
     this.owner,
+    this.roomName,
   });
 }

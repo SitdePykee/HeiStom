@@ -1,42 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/bill_entity.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
 import 'package:heistom/common/global_controller.dart';
 import 'package:get/get.dart';
+import 'package:heistom/renter/data/bill_repository.dart';
+import 'package:heistom/renter/presentation/controllers/bill_controller.dart';
+import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 import 'package:heistom/renter/presentation/pages/bill_done_page.dart';
 import 'package:intl/intl.dart';
 
-class BillPage extends StatelessWidget {
-  BillPage({super.key, required this.bill});
-  final BillEntity bill;
+class BillPage extends StatefulWidget {
+  BillPage({super.key, required this.lodging});
+
+  LodgingEntity lodging;
+
+  @override
+  State<BillPage> createState() => _BillPageState();
+}
+
+class _BillPageState extends State<BillPage> {
   final GlobalController globalController = Get.find<GlobalController>();
+  final SearchHouseController searchController = Get.find<SearchHouseController>();
+  final BillRepository billRepository = Get.find<BillRepository>();
+  final BillController billController = Get.find<BillController>();
 
   String formatDate(num milliseconds) {
-    DateTime dateTime =
-        DateTime.fromMillisecondsSinceEpoch(milliseconds.toInt());
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds.toInt());
     return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
   }
 
-  showConfirmationDialog(BuildContext context) {
+  void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Center(child: const Text('Thanh toán')),
+          title: const Center(child: Text('Thanh toán')),
           content: Text(
-            'Số tiền: ${bill.totalPrice} VNĐ',
+            'Số tiền: ${billController.calculateTotal(searchController.checkInDate.value.millisecondsSinceEpoch, searchController.checkOutDate.value.millisecondsSinceEpoch, widget.lodging, searchController.roomCount.value, searchController.peopleCount.value)} VNĐ',
             textAlign: TextAlign.center,
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: () => Get.back(),
               child: const Text('Hủy'),
             ),
             TextButton(
-              onPressed: () {
-                Get.to(BillDonePage(bill: bill));
-              },
+              onPressed: () async {
+                BillEntity bill = await billRepository.createBill(widget.lodging.id!);
+                Get.to(() => BillDonePage(bill: bill));
+                },
               child: const Text('Chuyển hướng tới ngân hàng'),
             ),
           ],
@@ -45,10 +57,18 @@ class BillPage extends StatelessWidget {
     );
   }
 
-  RxString paymentMethod = 'Chuyển khoản'.obs;
+  @override
+  void initState() {
+    super.initState();
+  
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isHourlyRented = bill.checkOutDate! - bill.checkInDate! < 86400000;
+    final checkIn = searchController.checkInDate.value.millisecondsSinceEpoch ?? 0;
+    final checkOut = searchController.checkOutDate.value.millisecondsSinceEpoch ?? 0;
+    final isHourlyRented = checkOut - checkIn < 86400000;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -61,7 +81,7 @@ class BillPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar!),
+                  image: NetworkImage(globalController.user.avatar ?? ''),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,212 +89,166 @@ class BillPage extends StatelessWidget {
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Chào buổi sáng',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black87,
-                  ),
-                ),
-                Text(
-                  globalController.user.name!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
+                const Text('Chào buổi sáng',
+                    style: TextStyle(fontSize: 12, color: Colors.black87)),
+                Text(globalController.user.name ?? 'Người dùng',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600)),
               ],
             ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 23,
-          ),
-          Center(
-            child: Text(bill.lodging?.name ?? 'Lodging Name',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                )),
-          ),
-          const SizedBox(
-            height: 23,
-          ),
-          InfoSection(
-            bill: bill,
-            isHourlyRented: isHourlyRented,
-            title: 'THÔNG TIN ĐẶT PHÒNG',
-            left: ['Số phòng', 'Số người', 'Phí'],
-            right: [
-              bill.room?.map((e) => e.id).join(', ') ?? 'Room ID',
-              bill.numberOfPeople.toString(),
-              isHourlyRented
-                  ? '${bill.lodging?.hourPrice}đ/giờ'
-                  : '${bill.lodging?.dayPrice}đ/ngày',
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          InfoSection(
-            bill: bill,
-            isHourlyRented: isHourlyRented,
-            title: 'THÔNG TIN KHÁCH HÀNG',
-            left: ['Tên', 'Email', 'Số điện thoại'],
-            right: [
-              bill.user?.name ?? 'User Name',
-              bill.user?.email ?? 'User Email',
-              bill.user?.phone ?? 'User Phone',
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          InfoSection(
-            bill: bill,
-            isHourlyRented: isHourlyRented,
-            title: 'THỜI GIAN ĐẶT PHÒNG',
-            left: ['Check-in', 'Check-out', 'Số ngày ở'],
-            right: [
-              formatDate(bill.checkInDate!),
-              formatDate(bill.checkOutDate!),
-              isHourlyRented
-                  ? '${((bill.checkOutDate! - bill.checkInDate!) / 3600000).toStringAsFixed(0)} giờ'
-                  : '${((bill.checkOutDate! - bill.checkInDate!) / 86400000).toStringAsFixed(0)} ngày',
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 21.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'THANH TOÁN',
+      body: Obx(() {
+        return Column(
+          children: [
+            const SizedBox(height: 23),
+            Center(
+              child: Text(widget.lodging.name ?? 'Lodging Name',
                   style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                      fontSize: 20, fontWeight: FontWeight.w500)),
+            ),
+            const SizedBox(height: 23),
+            InfoSection(
+              lodging: widget.lodging,
+              isHourlyRented: isHourlyRented,
+              title: 'THÔNG TIN ĐẶT PHÒNG',
+              left: ['Số phòng', 'Số người', 'Phí'],
+              right: [
+                searchController.roomCount.toString(),
+                searchController.peopleCount.toString(),
+                
+                    isHourlyRented
+                        ? '${widget.lodging.hourPrice ?? 0}đ/giờ'
+                        : '${widget.lodging.dayPrice ?? 0}đ/ngày',
+              ],
+            ),
+            const SizedBox(height: 12),
+            InfoSection(
+              lodging: widget.lodging,
+              isHourlyRented: isHourlyRented,
+              title: 'THÔNG TIN KHÁCH HÀNG',
+              left: ['Tên', 'Email', 'Số điện thoại'],
+              right: [
+                globalController.user.name ?? 'User Name',
+                globalController.user.email ?? 'User Email',
+                globalController.user.phone ?? 'User Phone',
+              ],
+            ),
+            const SizedBox(height: 12),
+            InfoSection(
+              lodging: widget.lodging,
+              isHourlyRented: isHourlyRented,
+              title: 'THỜI GIAN ĐẶT PHÒNG',
+              left: ['Check-in', 'Check-out', 'Số ngày ở'],
+              right: [
+                formatDate(checkIn),
+                formatDate(checkOut),
+                isHourlyRented
+                    ? '${((checkOut - checkIn) / 3600000).toStringAsFixed(0)} giờ'
+                    : '${((checkOut - checkIn) / 86400000).toStringAsFixed(0)} ngày',
+              ],
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 21.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('THANH TOÁN',
+                      style: TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500)),
+                  Obx(() => DropdownButton<String>(
+                        value: billController.paymentMethod.value,
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text('Chuyển khoản'),
+                            value: 'Chuyển khoản',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('Tiền mặt'),
+                            value: 'Tiền mặt',
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            billController.paymentMethod.value = value;
+     
+                          }
+                        },
+                      )),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Divider(color: Color(0xffE4E7EB)),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 21.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('TỔNG TIỀN',
+                      style: TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text('Số tiền: ${billController.calculateTotal(searchController.checkInDate.value.millisecondsSinceEpoch, searchController.checkOutDate.value.millisecondsSinceEpoch, widget.lodging, searchController.roomCount.value, searchController.peopleCount.value)} VNĐ',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xffEBA731))),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.red),
                   ),
+                  child: const Text('Hủy',
+                      style: TextStyle(color: Colors.black)),
                 ),
-                Obx(
-                  () => DropdownButton(
-                      value: paymentMethod.value,
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('Chuyển khoản'),
-                          value: 'Chuyển khoản',
-                        ),
-                        DropdownMenuItem(
-                          child: Text('Tiền mặt'),
-                          value: 'Tiền mặt',
-                        ),
-                      ],
-                      onChanged: (value) {
-                        paymentMethod.value = value!;
-                        bill.paymentMethod = value;
-                      }),
+                TextButton(
+                  onPressed: () async {
+                    if (billController.paymentMethod.value == 'Chuyển khoản') {
+                      showConfirmationDialog(context);
+                    } else {
+                      BillEntity bill = await billRepository.createBill(widget.lodging.id!);
+                      Get.to(() => BillDonePage(bill: bill));
+                    }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.green),
+                  ),
+                  child: const Text('Thanh toán',
+                      style: TextStyle(color: Colors.black)),
                 ),
               ],
             ),
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-          Divider(
-            color: const Color(0xffE4E7EB),
-            thickness: 1,
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 21.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'TỔNG TIỀN',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  '${bill.totalPrice!.toInt()}VNĐ',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xffEBA731),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.red),
-                ),
-                child: Text('Hủy',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    )),
-              ),
-              TextButton(
-                onPressed: () {
-                  showConfirmationDialog(context);
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.green),
-                ),
-                child: Text('Thanh toán',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    )),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+            const SizedBox(height: 20),
+          ],
+        );
+      }),
     );
   }
 }
 
+
 class InfoSection extends StatelessWidget {
   const InfoSection({
     super.key,
-    required this.bill,
+    required this.lodging,
     required this.isHourlyRented,
     required this.left,
     required this.right,
     this.title,
   });
 
-  final BillEntity bill;
+  final LodgingEntity lodging;
   final bool isHourlyRented;
   final List<String> left;
   final List<String> right;

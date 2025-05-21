@@ -8,31 +8,25 @@ part of 'bill_model.dart';
 
 _BillModel _$BillModelFromJson(Map<String, dynamic> json) => _BillModel(
       id: json['id'] as String?,
-      lodging: json['lodging'] == null
-          ? null
-          : LodgingModel.fromJson(json['lodging'] as Map<String, dynamic>),
-      user: json['user'] == null
-          ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      lodgingId: json['lodgingId'] as String?,
+      userID: json['userID'] as String?,
       numberOfPeople: (json['numberOfPeople'] as num?)?.toInt(),
-      room: (json['room'] as List<dynamic>?)
+      rooms: (json['rooms'] as List<dynamic>?)
           ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      checkInDate: json['checkInDate'] as num?,
-      checkOutDate: json['checkOutDate'] as num?,
-      totalPrice: (json['totalPrice'] as num?)?.toDouble(),
-      paymentMethod: json['paymentMethod'] as String?,
+      checkInAt: json['checkInAt'] as num?,
+      checkOutAt: json['checkOutAt'] as num?,
+      isBankTransfer: json['isBankTransfer'] as bool?,
     );
 
 Map<String, dynamic> _$BillModelToJson(_BillModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'lodging': instance.lodging,
-      'user': instance.user,
+      'lodgingId': instance.lodgingId,
+      'userID': instance.userID,
       'numberOfPeople': instance.numberOfPeople,
-      'room': instance.room,
-      'checkInDate': instance.checkInDate,
-      'checkOutDate': instance.checkOutDate,
-      'totalPrice': instance.totalPrice,
-      'paymentMethod': instance.paymentMethod,
+      'rooms': instance.rooms,
+      'checkInAt': instance.checkInAt,
+      'checkOutAt': instance.checkOutAt,
+      'isBankTransfer': instance.isBankTransfer,
     };

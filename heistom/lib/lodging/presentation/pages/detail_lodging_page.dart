@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:heistom/common/domain/entity/bill_entity.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
-import 'package:heistom/common/domain/entity/room_entity.dart';
 import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/lodging/presentation/widgets/lodging_detail_view.dart';
 import 'package:heistom/lodging/presentation/widgets/lodging_images_view.dart';
@@ -29,31 +27,7 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
     });
   }
 
-  //fixed code
-  late BillEntity bill;
-  GlobalController globalController = Get.find<GlobalController>();
-  @override
-  void initState() {
-    super.initState();
-
-    bill = BillEntity(
-      id: '1',
-      lodging: widget.lodging,
-      user: globalController.user,
-      numberOfPeople: 2,
-      room: [
-        RoomEntity(capacity: 2, id: '101'),
-        RoomEntity(capacity: 2, id: '102'),
-      ],
-      checkInDate: DateTime.now().millisecondsSinceEpoch,
-      checkOutDate:
-          DateTime.now().add(Duration(days: 2)).millisecondsSinceEpoch,
-      totalPrice: 2000000.0,
-      paymentMethod: 'Thẻ tín dụng',
-    );
-  }
-
-  //fixed code
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +62,7 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
         if (widget.isSearched)
           InkWell(
             onTap: () {
-              Get.off(BillPage(bill: bill));
+              Get.off(BillPage(lodging: widget.lodging));
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),

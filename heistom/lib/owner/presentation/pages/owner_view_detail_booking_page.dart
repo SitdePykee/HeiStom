@@ -48,7 +48,7 @@ class OwnerViewDetailBookingPage extends StatelessWidget {
                       _buildCustomerInfoItem(
                           'Email', booking.user?.email ?? '--'),
                       _buildCustomerInfoItem(
-                          'Số điện thoại', booking.user?.phone ?? '--'),
+                          'Số điện thoại', booking.user?.phoneNumber ?? '--'),
                       const SizedBox(height: 24),
                       // Booking Time Section
                       _buildSectionTitle('THỜI GIAN ĐẶT PHÒNG'),

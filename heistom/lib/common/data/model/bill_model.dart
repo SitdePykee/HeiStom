@@ -12,14 +12,13 @@ part 'bill_model.g.dart';
 sealed class BillModel with _$BillModel {
   factory BillModel({
     String? id,
-    LodgingModel? lodging,
-    UserModel? user,
+    String? lodgingId,
+    String? userID,
     int? numberOfPeople,
-    List<RoomModel>? room,
-    num? checkInDate,
-    num? checkOutDate,
-    double? totalPrice,
-    String? paymentMethod,
+    List<RoomModel>? rooms,
+    num? checkInAt,
+    num? checkOutAt,
+    bool? isBankTransfer,
   }) = _BillModel;
 
   factory BillModel.fromJson(Map<String, dynamic> json) =>
@@ -29,13 +28,12 @@ sealed class BillModel with _$BillModel {
 extension BillModelX on BillModel {
   BillEntity toEntity() => BillEntity(
         id: id,
-        lodging: lodging?.toEntity(),
-        user: user?.toEntity(),
+        lodgingID: lodgingId,
+        user: userID,
         numberOfPeople: numberOfPeople,
-        room: room?.map((room) => room.toEntity()).toList(),
-        checkInDate: checkInDate,
-        checkOutDate: checkOutDate,
-        totalPrice: totalPrice,
-        paymentMethod: paymentMethod,
+        room: rooms?.map((room) => room.toEntity()).toList(),
+        checkInDate: checkInAt,
+        checkOutDate: checkOutAt,
+        paymentMethod: isBankTransfer == true ? 'Chuyển khoản' : 'Tiền mặt',
       );
 }

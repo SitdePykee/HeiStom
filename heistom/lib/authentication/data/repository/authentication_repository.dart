@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class AuthenticationRepository {
   Dio dio = Dio();
-  final String baseUrl = 'http://127.0.0.1:8080/v1';
+  final String baseUrl = 'http://localhost:8080/v1';
   GlobalController globalController = Get.find<GlobalController>();
 
   Future<void> signIn(String email, String password) async {

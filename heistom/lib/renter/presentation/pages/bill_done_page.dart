@@ -1,16 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/bill_entity.dart';
+import 'package:heistom/common/domain/entity/lodging_entity.dart';
+import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/main.dart';
+import 'package:heistom/renter/data/bill_repository.dart';
 import 'package:heistom/renter/presentation/pages/bill_page.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class BillDonePage extends StatelessWidget {
+class BillDonePage extends StatefulWidget {
   BillDonePage({super.key, required this.bill});
   final BillEntity bill;
 
+
+
+  @override
+  State<BillDonePage> createState() => _BillDonePageState();
+}
+
+class _BillDonePageState extends State<BillDonePage> {
+
+
+  GlobalController globalController = Get.find<GlobalController>();
+  BillRepository billRepository = Get.find<BillRepository>();
+  LodgingEntity? lodging;
+  
+
+  void getLodging() async {
+    lodging = await billRepository.getLodgingById(widget.bill.lodgingID!);}
+
+  @override
+  initState() {
+    getLodging();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isHourlyRented = bill.checkOutDate! - bill.checkInDate! < 86400000;
+    final checkIn = widget.bill.checkInDate ?? 0;
+    final checkOut = widget.bill.checkOutDate ?? 0;
+    
+    final bool isHourlyRented = checkOut - checkIn < 86400000;
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -45,38 +76,44 @@ class BillDonePage extends StatelessWidget {
                   ),
                 ),
                 child: InfoSection(
-                    bill: bill,
-                    isHourlyRented: isHourlyRented,
-                    left: [
-                      'Tên',
-                      'Email',
-                      'Số điện thoại',
-                      'Số phòng',
-                      'Số người ở',
-                      'Phí',
-                      'Check-in',
-                      'Check-out',
-                      'Số ngày ở',
-                      'Thanh toán'
-                    ],
-                    right: [
-                      bill.user?.name ?? '',
-                      bill.user?.email ?? '',
-                      bill.user?.phone ?? '',
-                      bill.room?.map((e) => e.id).join(', ') ?? '',
-                      bill.numberOfPeople.toString(),
-                      bill.totalPrice.toString(),
-                      DateTime.fromMillisecondsSinceEpoch(
-                              bill.checkInDate!.toInt())
-                          .toString(),
-                      DateTime.fromMillisecondsSinceEpoch(
-                              bill.checkOutDate!.toInt())
-                          .toString(),
-                      isHourlyRented
-                          ? '${(bill.checkOutDate! - bill.checkInDate!) / 3600000} giờ'
-                          : '${(bill.checkOutDate! - bill.checkInDate!) / 86400000} ngày',
-                      bill.paymentMethod ?? '',
-                    ]),
+                  lodging: lodging ?? lodgingPlaceholder, // fallback placeholder
+                  isHourlyRented: isHourlyRented,
+                  left: [
+                    'Tên',
+                    'Email',
+                    'Số điện thoại',
+                    'Số phòng',
+                    'Số người ở',
+                    'Phí',
+                    'Check-in',
+                    'Check-out',
+                    'Số ngày ở',
+                    'Thanh toán'
+                  ],
+                  right: [
+                    globalController.user.name ?? 'Không rõ',
+                    globalController.user.email ?? 'Không rõ',
+                    globalController.user.phone ?? 'Không rõ',
+                    widget.bill.room?.map((e) => e.roomName).join(', ') ?? '-',
+                    widget.bill.numberOfPeople?.toString() ?? '-',
+                    widget.bill?.toString() ?? '-',
+                    checkIn > 0
+                      ? DateFormat("yyyy-MM-dd HH:mm").format(
+                          DateTime.fromMillisecondsSinceEpoch(checkIn.toInt()))
+                      : '-',
+
+                    checkOut > 0
+                      ? DateFormat("yyyy-MM-dd HH:mm").format(
+                          DateTime.fromMillisecondsSinceEpoch(checkOut.toInt()))
+                      : '-',
+                    (checkOut > 0 && checkIn > 0)
+                        ? isHourlyRented
+                            ? '${((checkOut - checkIn) / 3600000).toStringAsFixed(1)} giờ'
+                            : '${((checkOut - checkIn) / 86400000).toStringAsFixed(1)} ngày'
+                        : '-',
+                    widget.bill.paymentMethod ?? '-',
+                  ],
+                ),
               ),
               const SizedBox(height: 47),
               TextButton(
@@ -100,3 +137,16 @@ class BillDonePage extends StatelessWidget {
     );
   }
 }
+
+
+LodgingEntity lodgingPlaceholder = LodgingEntity(
+  id: 'Lỗi',
+  name: 'Lỗi',
+  address: 'Lỗi',
+  description: 'Lỗi',
+  image: [],
+  dayPrice: 0,
+  hourPrice: 0,
+  rating: 0,
+  amenities: [],
+);
