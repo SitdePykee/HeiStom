@@ -22,13 +22,12 @@ class DetailRenterPage extends StatelessWidget {
         ),
       ),
       body: Column(
-        
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 24),
           CircleAvatar(
             radius: 32,
-            backgroundImage: Image.network(renter.avatar ?? '').image,
+            backgroundImage: Image.asset(renter.avatar ?? '').image,
           ),
           const SizedBox(height: 8),
           Text(
@@ -45,39 +44,29 @@ class DetailRenterPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Tên'),
                   const SizedBox(height: 8),
                   Text('Email'),
                   const SizedBox(height: 8),
                   Text('Số điện thoại'),
-
-                ]
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
+                ]),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text(renter.name ?? ''),
                   const SizedBox(height: 8),
                   Text(renter.email ?? ''),
                   const SizedBox(height: 8),
                   Text(renter.phone ?? ''),
-
-                ]
-              ),
-            ],
+                ]),
+              ],
+            ),
           ),
-        ),
-          
         ],
       ),
     );
   }
-
 }

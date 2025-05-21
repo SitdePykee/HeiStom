@@ -27,7 +27,6 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +83,7 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
       body: Column(
         children: [
           widget.lodging.image != null && widget.lodging.image!.isNotEmpty
-              ? Image.network(
+              ? Image.asset(
                   widget.lodging.image!.first,
                   fit: BoxFit.cover,
                 )

@@ -19,7 +19,7 @@ class Streetcard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
+                child: Image.asset(
                   street.image ?? '',
                   fit: BoxFit.cover,
                   width: 74,

@@ -37,7 +37,7 @@ class _DetailOwnerPageState extends State<DetailOwnerPage>
           const SizedBox(height: 8),
           CircleAvatar(
             radius: 32,
-            backgroundImage: Image.network(widget.owner.avatar ?? '').image,
+            backgroundImage: Image.asset(widget.owner.avatar ?? '').image,
           ),
           const SizedBox(height: 8),
           Text(

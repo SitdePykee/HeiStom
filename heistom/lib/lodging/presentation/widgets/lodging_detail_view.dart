@@ -128,7 +128,7 @@ class LodgingDetailView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage:
-                        Image.network(lodging.owner?.avatar ?? '').image,
+                        Image.asset(lodging.owner?.avatar ?? '').image,
                   ),
                   const SizedBox(
                     width: 8,

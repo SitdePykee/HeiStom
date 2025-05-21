@@ -30,7 +30,7 @@ class LodgingImagesView extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
+                      child: Image.asset(
                         image,
                         fit: BoxFit.cover,
                       ),

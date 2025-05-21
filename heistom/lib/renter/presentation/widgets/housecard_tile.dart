@@ -27,35 +27,34 @@ class HousecardTile extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(12)),
             child: lodging.image?.isNotEmpty == true
-    ? Image.network(
-        lodging.image!.first,
-        width: 87,
-        height: 87,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: 87,
-            height: 87,
-            color: Colors.grey[300],
-            child: Icon(
-              Icons.image,
-              size: 32,
-              color: Colors.grey[600],
-            ),
-          );
-        },
-      )
-    : Container(
-        width: 87,
-        height: 87,
-        color: Colors.grey[300],
-        child: Icon(
-          Icons.image,
-          size: 32,
-          color: Colors.grey[600],
-        ),
-      ),
-
+                ? Image.asset(
+                    lodging.image!.first,
+                    width: 87,
+                    height: 87,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 87,
+                        height: 87,
+                        color: Colors.grey[300],
+                        child: Icon(
+                          Icons.image,
+                          size: 32,
+                          color: Colors.grey[600],
+                        ),
+                      );
+                    },
+                  )
+                : Container(
+                    width: 87,
+                    height: 87,
+                    color: Colors.grey[300],
+                    child: Icon(
+                      Icons.image,
+                      size: 32,
+                      color: Colors.grey[600],
+                    ),
+                  ),
           ),
           SizedBox(
             width: 12,

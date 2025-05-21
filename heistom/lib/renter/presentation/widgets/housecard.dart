@@ -22,7 +22,7 @@ class HouseCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
+                child: Image.asset(
                   lodging.image?.first ?? '',
                   fit: BoxFit.cover,
                   width: 74,

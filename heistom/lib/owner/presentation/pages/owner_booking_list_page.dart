@@ -105,7 +105,7 @@ class OwnerBookingListPage extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
+              child: Image.asset(
                 imageUrl, // Replace with actual image URL
                 width: 80,
                 height: 80,
