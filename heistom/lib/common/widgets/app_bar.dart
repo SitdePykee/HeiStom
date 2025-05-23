@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 
 import '../global_controller.dart';
 
@@ -18,7 +19,11 @@ class AppBarWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
-              image: NetworkImage(globalController.user.avatar ?? ''),
+              image: globalController.user.avatar != null &&
+                      globalController.user.avatar!.isNotEmpty
+                  ? FileImage(File(globalController.user.avatar!))
+                      as ImageProvider
+                  : const AssetImage('assets/images/default_avatar.png'),
               fit: BoxFit.cover,
             ),
           ),

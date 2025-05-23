@@ -6,27 +6,29 @@ import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 
 class BookingRepository {
   Dio dio = Dio();
-  final String baseUrl = 'http://localhost:8080/v1';
+  final String baseUrl = 'http://10.0.2.2:8080/v1';
   SearchHouseController searchController = Get.find<SearchHouseController>();
 
-  Future<void> bookLodging(String id) async{
+  Future<void> bookLodging(String id) async {
     try {
       final response = await dio.post(
         '$baseUrl/lodging/book',
         data: {
           "lodgingId": id,
           "criteria": {
-            "checkIn": searchController.checkInDate.value.millisecondsSinceEpoch,
-            "checkOut": searchController.checkOutDate.value.millisecondsSinceEpoch,
+            "checkIn":
+                searchController.checkInDate.value.millisecondsSinceEpoch,
+            "checkOut":
+                searchController.checkOutDate.value.millisecondsSinceEpoch,
             "numberOfPeople": searchController.peopleCount.value,
             "numberOfRoom": searchController.roomCount.value,
           },
-          "amenities": searchController.selectedAmenities.map((amenity) => amenity.name).toList(),
-          
+          "amenities": searchController.selectedAmenities
+              .map((amenity) => amenity.name)
+              .toList(),
         },
       );
       if (response.statusCode == 200) {
-        print("bú");
       } else {
         // Handle error
       }

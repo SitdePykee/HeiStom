@@ -10,7 +10,10 @@ _BillModel _$BillModelFromJson(Map<String, dynamic> json) => _BillModel(
       id: json['id'] as String?,
       lodgingId: json['lodgingId'] as String?,
       userID: json['userID'] as String?,
-      numberOfPeople: (json['numberOfPeople'] as num?)?.toInt(),
+      lodging: json['lodging'] == null
+          ? null
+          : LodgingModel.fromJson(json['lodging'] as Map<String, dynamic>),
+      numOfPeople: (json['numOfPeople'] as num?)?.toInt(),
       rooms: (json['rooms'] as List<dynamic>?)
           ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -24,7 +27,8 @@ Map<String, dynamic> _$BillModelToJson(_BillModel instance) =>
       'id': instance.id,
       'lodgingId': instance.lodgingId,
       'userID': instance.userID,
-      'numberOfPeople': instance.numberOfPeople,
+      'lodging': instance.lodging,
+      'numOfPeople': instance.numOfPeople,
       'rooms': instance.rooms,
       'checkInAt': instance.checkInAt,
       'checkOutAt': instance.checkOutAt,

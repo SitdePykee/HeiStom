@@ -25,7 +25,7 @@ import 'owner/presentation/pages/owner_statistics_page.dart';
 void main() {
   Get.put(GlobalController());
   Get.put<GlobalController>(GlobalController());
-  
+
   Get.put<SearchHouseController>(SearchHouseController());
   Get.put<SearchRepository>(SearchRepository());
   Get.put<BillController>(BillController());
@@ -119,13 +119,9 @@ class _NavBarScreenState extends State<NavBarScreen> {
       case 0:
         return HomePage();
       case 1:
-        return FavoritedHomestayPage(
-          lodgings: houses,
-        );
+        return FavoritedHomestayPage();
       case 2:
-        return BookedHomestayPage(
-          lodgings: houses,
-        );
+        return BookedHomestayPage();
       case 3:
         return DetailRenterPage(renter: globalController.user);
       default:

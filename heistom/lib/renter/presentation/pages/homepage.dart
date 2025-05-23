@@ -16,6 +16,7 @@ import 'package:heistom/renter/presentation/widgets/streetcard_view.dart';
 
 import '../../../common/domain/entity/lodging_entity.dart';
 import '../../../common/domain/entity/user_entity.dart';
+import 'dart:io';
 
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -81,8 +82,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar ??
-                      'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png'),
+                  image: FileImage(File(globalController.user.avatar!)),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -130,10 +130,11 @@ class _HomePageState extends State<HomePage> {
                     controller: controller.searchController,
                     suggestionsCallback: (String search) {
                       final query = search.toLowerCase();
-                      return houses.where((lodging) =>
-  lodging.name!.toLowerCase().contains(query) ||
-  lodging.address!.toLowerCase().contains(query)).toList();
-
+                      return houses
+                          .where((lodging) =>
+                              lodging.name!.toLowerCase().contains(query) ||
+                              lodging.address!.toLowerCase().contains(query))
+                          .toList();
                     },
                     builder: (context, textController, focusNode) {
                       return TextField(
@@ -267,7 +268,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: TextButton(
                     onPressed: () async {
-                      controller.results.value = await searchRepository.searchLodgings();
+                      controller.results.value =
+                          await searchRepository.searchLodgings();
                       Get.to(() => SearchResultPage());
                     },
                     child: const Text(
@@ -296,7 +298,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 List<ReviewEntity> sampleReviews = [
   ReviewEntity(
@@ -362,32 +363,30 @@ List<ReviewEntity> sampleReviews = [
   ),
 ];
 
-
-
 final streets = [
   StreetEntity(
     id: '1',
     name: 'Nguyễn Huệ',
-    image: 'https://redsvn.net/wp-content/uploads/2020/03/Pho-Hang-Bai-01.jpg',
+    image: 'assets/images/image.jpg',
   ),
   StreetEntity(
     id: '2',
     name: 'Lê Lợi',
-    image: 'https://redsvn.net/wp-content/uploads/2020/03/Pho-Hang-Bai-01.jpg',
+    image: 'assets/images/image.jpg',
   ),
   StreetEntity(
     id: '3',
     name: 'Trần Hưng Đạo',
-    image: 'https://redsvn.net/wp-content/uploads/2020/03/Pho-Hang-Bai-01.jpg',
+    image: 'assets/images/image.jpg',
   ),
   StreetEntity(
     id: '4',
     name: 'Phạm Ngũ Lão',
-    image: 'https://redsvn.net/wp-content/uploads/2020/03/Pho-Hang-Bai-01.jpg',
+    image: 'assets/images/image.jpg',
   ),
   StreetEntity(
     id: '5',
     name: 'Pasteur',
-    image: 'https://redsvn.net/wp-content/uploads/2020/03/Pho-Hang-Bai-01.jpg',
+    image: 'assets/images/image.jpg',
   ),
 ];

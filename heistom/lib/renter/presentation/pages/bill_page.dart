@@ -8,6 +8,7 @@ import 'package:heistom/renter/presentation/controllers/bill_controller.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 import 'package:heistom/renter/presentation/pages/bill_done_page.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class BillPage extends StatefulWidget {
   BillPage({super.key, required this.lodging});
@@ -20,12 +21,14 @@ class BillPage extends StatefulWidget {
 
 class _BillPageState extends State<BillPage> {
   final GlobalController globalController = Get.find<GlobalController>();
-  final SearchHouseController searchController = Get.find<SearchHouseController>();
+  final SearchHouseController searchController =
+      Get.find<SearchHouseController>();
   final BillRepository billRepository = Get.find<BillRepository>();
   final BillController billController = Get.find<BillController>();
 
   String formatDate(num milliseconds) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds.toInt());
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(milliseconds.toInt());
     return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
   }
 
@@ -46,9 +49,10 @@ class _BillPageState extends State<BillPage> {
             ),
             TextButton(
               onPressed: () async {
-                BillEntity bill = await billRepository.createBill(widget.lodging.id!);
+                BillEntity bill =
+                    await billRepository.createBill(widget.lodging.id!);
                 Get.to(() => BillDonePage(bill: bill));
-                },
+              },
               child: const Text('Chuyển hướng tới ngân hàng'),
             ),
           ],
@@ -60,13 +64,14 @@ class _BillPageState extends State<BillPage> {
   @override
   void initState() {
     super.initState();
-  
   }
 
   @override
   Widget build(BuildContext context) {
-    final checkIn = searchController.checkInDate.value.millisecondsSinceEpoch ?? 0;
-    final checkOut = searchController.checkOutDate.value.millisecondsSinceEpoch ?? 0;
+    final checkIn =
+        searchController.checkInDate.value.millisecondsSinceEpoch ?? 0;
+    final checkOut =
+        searchController.checkOutDate.value.millisecondsSinceEpoch ?? 0;
     final isHourlyRented = checkOut - checkIn < 86400000;
 
     return Scaffold(
@@ -81,7 +86,7 @@ class _BillPageState extends State<BillPage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar ?? ''),
+                  image: FileImage(File(globalController.user.avatar!)),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -118,10 +123,9 @@ class _BillPageState extends State<BillPage> {
               right: [
                 searchController.roomCount.toString(),
                 searchController.peopleCount.toString(),
-                
-                    isHourlyRented
-                        ? '${widget.lodging.hourPrice ?? 0}đ/giờ'
-                        : '${widget.lodging.dayPrice ?? 0}đ/ngày',
+                isHourlyRented
+                    ? '${widget.lodging.hourPrice ?? 0}đ/giờ'
+                    : '${widget.lodging.dayPrice ?? 0}đ/ngày',
               ],
             ),
             const SizedBox(height: 12),
@@ -157,8 +161,8 @@ class _BillPageState extends State<BillPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('THANH TOÁN',
-                      style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500)),
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                   Obx(() => DropdownButton<String>(
                         value: billController.paymentMethod.value,
                         items: const [
@@ -174,7 +178,6 @@ class _BillPageState extends State<BillPage> {
                         onChanged: (value) {
                           if (value != null) {
                             billController.paymentMethod.value = value;
-     
                           }
                         },
                       )),
@@ -190,9 +193,10 @@ class _BillPageState extends State<BillPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('TỔNG TIỀN',
-                      style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500)),
-                  Text('Số tiền: ${billController.calculateTotal(searchController.checkInDate.value.millisecondsSinceEpoch, searchController.checkOutDate.value.millisecondsSinceEpoch, widget.lodging, searchController.roomCount.value, searchController.peopleCount.value)} VNĐ',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(
+                      'Số tiền: ${billController.calculateTotal(searchController.checkInDate.value.millisecondsSinceEpoch, searchController.checkOutDate.value.millisecondsSinceEpoch, widget.lodging, searchController.roomCount.value, searchController.peopleCount.value)} VNĐ',
                       style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -209,15 +213,16 @@ class _BillPageState extends State<BillPage> {
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(Colors.red),
                   ),
-                  child: const Text('Hủy',
-                      style: TextStyle(color: Colors.black)),
+                  child:
+                      const Text('Hủy', style: TextStyle(color: Colors.black)),
                 ),
                 TextButton(
                   onPressed: () async {
                     if (billController.paymentMethod.value == 'Chuyển khoản') {
                       showConfirmationDialog(context);
                     } else {
-                      BillEntity bill = await billRepository.createBill(widget.lodging.id!);
+                      BillEntity bill =
+                          await billRepository.createBill(widget.lodging.id!);
                       Get.to(() => BillDonePage(bill: bill));
                     }
                   },
@@ -236,7 +241,6 @@ class _BillPageState extends State<BillPage> {
     );
   }
 }
-
 
 class InfoSection extends StatelessWidget {
   const InfoSection({

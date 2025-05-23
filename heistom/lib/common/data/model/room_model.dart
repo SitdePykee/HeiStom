@@ -12,9 +12,8 @@ sealed class RoomModel with _$RoomModel {
     String? id,
     String? status,
     int? capacity,
-    UserModel? owner, 
+    UserModel? owner,
     int? roomName,
-    
   }) = _RoomModel;
 
   factory RoomModel.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +27,5 @@ extension RoomModelX on RoomModel {
         capacity: capacity,
         roomName: roomName.toString(),
         owner: owner?.toEntity(),
-        
       );
 }

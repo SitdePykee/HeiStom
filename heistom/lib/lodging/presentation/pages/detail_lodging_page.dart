@@ -20,6 +20,39 @@ class DetailLodgingPage extends StatefulWidget {
 
 class _DetailLodgingPageState extends State<DetailLodgingPage> {
   int _selectedIndex = 0;
+  bool isFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus();
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> favoritedList = prefs.getStringList('favorited') ?? [];
+    setState(() {
+      isFavorited = favoritedList.contains(widget.lodging.id);
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoritedList = prefs.getStringList('favorited') ?? [];
+
+    setState(() {
+      if (isFavorited) {
+        favoritedList.remove(widget.lodging.id);
+        isFavorited = false;
+      } else {
+        favoritedList.add(widget.lodging.id!);
+        isFavorited = true;
+      }
+    });
+
+    await prefs.setStringList('favorited', favoritedList);
+  }
 
   void _onSegmentChanged(Set<int> selected) {
     setState(() {
@@ -42,21 +75,17 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
         ),
         actions: [
           InkWell(
-            // hai anh code dinh vl
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              String favorited = prefs.getString(widget.lodging.id!) ?? '';
-              await prefs.setString('favorited', favorited);
-            },
+            onTap: _toggleFavorite,
             child: Icon(
-              Icons.favorite_border,
-              color: Colors.black,
+              isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: isFavorited ? Colors.red : Colors.black,
               size: 24,
             ),
           ),
         ],
         actionsPadding: EdgeInsets.only(right: 16),
       ),
+      // phần còn lại giữ nguyên
       persistentFooterButtons: [
         if (widget.isSearched)
           InkWell(

@@ -1,15 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:heistom/common/domain/entity/lodging_entity.dart';
+import 'package:heistom/common/domain/entity/bill_entity.dart';
 import 'package:heistom/common/global_controller.dart';
-import 'package:heistom/renter/presentation/widgets/housecard_tile.dart';
+import 'package:heistom/renter/data/bill_repository.dart';
+import 'package:heistom/renter/presentation/widgets/booked_housecard_tile.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 
-class BookedHomestayPage extends StatelessWidget {
-  BookedHomestayPage({super.key, required this.lodgings});
+class BookedHomestayPage extends StatefulWidget {
+  const BookedHomestayPage({super.key});
 
-  List<LodgingEntity> lodgings;
-  GlobalController globalController = Get.find<GlobalController>();
+  @override
+  State<BookedHomestayPage> createState() => _BookedHomestayPageState();
+}
+
+class _BookedHomestayPageState extends State<BookedHomestayPage> {
+  final GlobalController globalController = Get.find<GlobalController>();
+  final BillRepository billRepository = Get.find<BillRepository>();
+
+  List<BillEntity>? bills;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadBills();
+  }
+
+  Future<void> loadBills() async {
+    try {
+      final fetchedBills = await billRepository.getBills();
+      setState(() {
+        bills = fetchedBills;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        bills = [];
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +55,7 @@ class BookedHomestayPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar ??
-                      'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png'),
+                  image: FileImage(File(globalController.user.avatar!)),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -44,7 +74,7 @@ class BookedHomestayPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  globalController.user.name!,
+                  globalController.user.name ?? '',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -56,32 +86,55 @@ class BookedHomestayPage extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 24),
-            Text('Danh sách phòng đặt',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1A1A1A))),
-            SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
               child: Column(
-                children: lodgings
-                    .map((lodging) => Column(
-                          children: [
-                            HousecardTile(lodging: lodging),
-                            const SizedBox(height: 12),
-                          ],
-                        ))
-                    .toList(),
+                children: [
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Danh sách phòng đặt',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1A1A1A)),
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: (bills == null || bills!.isEmpty)
+                        ? Center(
+                            child: Column(
+                              children: const [
+                                SizedBox(height: 48),
+                                Icon(Icons.info_outline,
+                                    size: 48, color: Colors.grey),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Bạn chưa đặt phòng nào',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            children: bills!
+                                .map((bill) => Column(
+                                      children: [
+                                        BookedHousecardTile(bill: bill),
+                                        const SizedBox(height: 12),
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
     );
   }
 }

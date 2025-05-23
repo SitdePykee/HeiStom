@@ -10,17 +10,17 @@ import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 
 class BillRepository {
   final Dio dio = Dio();
-  final String baseUrl = 'http://localhost:8080/v1';
+  final String baseUrl = 'http://10.0.2.2:8080/v1';
   GlobalController globalController = Get.find<GlobalController>();
   BillController billController = Get.find<BillController>();
-  final SearchHouseController searchController = Get.find<SearchHouseController>();
+  final SearchHouseController searchController =
+      Get.find<SearchHouseController>();
 
   Future<List<BillEntity>> getBills() async {
     try {
       final response = await dio.get(
         '$baseUrl/lodging/user-book-list',
-        queryParameters: 
-          {'userId': '${globalController.user.id}'},
+        queryParameters: {'userId': '${globalController.user.id}'},
       );
       if (response.statusCode == 200) {
         List<BillEntity> bills = (response.data['data'] as List)
@@ -43,13 +43,17 @@ class BillRepository {
           'lodgingId': lodgingId,
           'userId': globalController.user.id,
           'criteria': {
-            'address' : searchController.searchController.text,
-            'checkIn': searchController.checkInDate.value.millisecondsSinceEpoch,
-            'checkOut': searchController.checkOutDate.value.millisecondsSinceEpoch,
+            'address': searchController.searchController.text,
+            'checkIn':
+                searchController.checkInDate.value.millisecondsSinceEpoch,
+            'checkOut':
+                searchController.checkOutDate.value.millisecondsSinceEpoch,
             'numOfPeople': searchController.peopleCount.value,
             'numOfRoom': searchController.roomCount.value,
           },
-          'amenities': searchController.selectedAmenities.map((amenity) => amenity.name).toList(),
+          'amenities': searchController.selectedAmenities
+              .map((amenity) => amenity.name)
+              .toList(),
           'bankTransfer': billController.isTransfer().value,
         },
       );

@@ -18,7 +18,8 @@ mixin _$BillModel {
   String? get id;
   String? get lodgingId;
   String? get userID;
-  int? get numberOfPeople;
+  LodgingModel? get lodging;
+  int? get numOfPeople;
   List<RoomModel>? get rooms;
   num? get checkInAt;
   num? get checkOutAt;
@@ -43,8 +44,9 @@ mixin _$BillModel {
             (identical(other.lodgingId, lodgingId) ||
                 other.lodgingId == lodgingId) &&
             (identical(other.userID, userID) || other.userID == userID) &&
-            (identical(other.numberOfPeople, numberOfPeople) ||
-                other.numberOfPeople == numberOfPeople) &&
+            (identical(other.lodging, lodging) || other.lodging == lodging) &&
+            (identical(other.numOfPeople, numOfPeople) ||
+                other.numOfPeople == numOfPeople) &&
             const DeepCollectionEquality().equals(other.rooms, rooms) &&
             (identical(other.checkInAt, checkInAt) ||
                 other.checkInAt == checkInAt) &&
@@ -61,7 +63,8 @@ mixin _$BillModel {
       id,
       lodgingId,
       userID,
-      numberOfPeople,
+      lodging,
+      numOfPeople,
       const DeepCollectionEquality().hash(rooms),
       checkInAt,
       checkOutAt,
@@ -69,7 +72,7 @@ mixin _$BillModel {
 
   @override
   String toString() {
-    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, numberOfPeople: $numberOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
+    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, lodging: $lodging, numOfPeople: $numOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
   }
 }
 
@@ -82,11 +85,14 @@ abstract mixin class $BillModelCopyWith<$Res> {
       {String? id,
       String? lodgingId,
       String? userID,
-      int? numberOfPeople,
+      LodgingModel? lodging,
+      int? numOfPeople,
       List<RoomModel>? rooms,
       num? checkInAt,
       num? checkOutAt,
       bool? isBankTransfer});
+
+  $LodgingModelCopyWith<$Res>? get lodging;
 }
 
 /// @nodoc
@@ -104,7 +110,8 @@ class _$BillModelCopyWithImpl<$Res> implements $BillModelCopyWith<$Res> {
     Object? id = freezed,
     Object? lodgingId = freezed,
     Object? userID = freezed,
-    Object? numberOfPeople = freezed,
+    Object? lodging = freezed,
+    Object? numOfPeople = freezed,
     Object? rooms = freezed,
     Object? checkInAt = freezed,
     Object? checkOutAt = freezed,
@@ -123,9 +130,13 @@ class _$BillModelCopyWithImpl<$Res> implements $BillModelCopyWith<$Res> {
           ? _self.userID
           : userID // ignore: cast_nullable_to_non_nullable
               as String?,
-      numberOfPeople: freezed == numberOfPeople
-          ? _self.numberOfPeople
-          : numberOfPeople // ignore: cast_nullable_to_non_nullable
+      lodging: freezed == lodging
+          ? _self.lodging
+          : lodging // ignore: cast_nullable_to_non_nullable
+              as LodgingModel?,
+      numOfPeople: freezed == numOfPeople
+          ? _self.numOfPeople
+          : numOfPeople // ignore: cast_nullable_to_non_nullable
               as int?,
       rooms: freezed == rooms
           ? _self.rooms
@@ -145,6 +156,20 @@ class _$BillModelCopyWithImpl<$Res> implements $BillModelCopyWith<$Res> {
               as bool?,
     ));
   }
+
+  /// Create a copy of BillModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $LodgingModelCopyWith<$Res>? get lodging {
+    if (_self.lodging == null) {
+      return null;
+    }
+
+    return $LodgingModelCopyWith<$Res>(_self.lodging!, (value) {
+      return _then(_self.copyWith(lodging: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -154,7 +179,8 @@ class _BillModel implements BillModel {
       {this.id,
       this.lodgingId,
       this.userID,
-      this.numberOfPeople,
+      this.lodging,
+      this.numOfPeople,
       final List<RoomModel>? rooms,
       this.checkInAt,
       this.checkOutAt,
@@ -170,7 +196,9 @@ class _BillModel implements BillModel {
   @override
   final String? userID;
   @override
-  final int? numberOfPeople;
+  final LodgingModel? lodging;
+  @override
+  final int? numOfPeople;
   final List<RoomModel>? _rooms;
   @override
   List<RoomModel>? get rooms {
@@ -212,8 +240,9 @@ class _BillModel implements BillModel {
             (identical(other.lodgingId, lodgingId) ||
                 other.lodgingId == lodgingId) &&
             (identical(other.userID, userID) || other.userID == userID) &&
-            (identical(other.numberOfPeople, numberOfPeople) ||
-                other.numberOfPeople == numberOfPeople) &&
+            (identical(other.lodging, lodging) || other.lodging == lodging) &&
+            (identical(other.numOfPeople, numOfPeople) ||
+                other.numOfPeople == numOfPeople) &&
             const DeepCollectionEquality().equals(other._rooms, _rooms) &&
             (identical(other.checkInAt, checkInAt) ||
                 other.checkInAt == checkInAt) &&
@@ -230,7 +259,8 @@ class _BillModel implements BillModel {
       id,
       lodgingId,
       userID,
-      numberOfPeople,
+      lodging,
+      numOfPeople,
       const DeepCollectionEquality().hash(_rooms),
       checkInAt,
       checkOutAt,
@@ -238,7 +268,7 @@ class _BillModel implements BillModel {
 
   @override
   String toString() {
-    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, numberOfPeople: $numberOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
+    return 'BillModel(id: $id, lodgingId: $lodgingId, userID: $userID, lodging: $lodging, numOfPeople: $numOfPeople, rooms: $rooms, checkInAt: $checkInAt, checkOutAt: $checkOutAt, isBankTransfer: $isBankTransfer)';
   }
 }
 
@@ -254,11 +284,15 @@ abstract mixin class _$BillModelCopyWith<$Res>
       {String? id,
       String? lodgingId,
       String? userID,
-      int? numberOfPeople,
+      LodgingModel? lodging,
+      int? numOfPeople,
       List<RoomModel>? rooms,
       num? checkInAt,
       num? checkOutAt,
       bool? isBankTransfer});
+
+  @override
+  $LodgingModelCopyWith<$Res>? get lodging;
 }
 
 /// @nodoc
@@ -276,7 +310,8 @@ class __$BillModelCopyWithImpl<$Res> implements _$BillModelCopyWith<$Res> {
     Object? id = freezed,
     Object? lodgingId = freezed,
     Object? userID = freezed,
-    Object? numberOfPeople = freezed,
+    Object? lodging = freezed,
+    Object? numOfPeople = freezed,
     Object? rooms = freezed,
     Object? checkInAt = freezed,
     Object? checkOutAt = freezed,
@@ -295,9 +330,13 @@ class __$BillModelCopyWithImpl<$Res> implements _$BillModelCopyWith<$Res> {
           ? _self.userID
           : userID // ignore: cast_nullable_to_non_nullable
               as String?,
-      numberOfPeople: freezed == numberOfPeople
-          ? _self.numberOfPeople
-          : numberOfPeople // ignore: cast_nullable_to_non_nullable
+      lodging: freezed == lodging
+          ? _self.lodging
+          : lodging // ignore: cast_nullable_to_non_nullable
+              as LodgingModel?,
+      numOfPeople: freezed == numOfPeople
+          ? _self.numOfPeople
+          : numOfPeople // ignore: cast_nullable_to_non_nullable
               as int?,
       rooms: freezed == rooms
           ? _self._rooms
@@ -316,6 +355,20 @@ class __$BillModelCopyWithImpl<$Res> implements _$BillModelCopyWith<$Res> {
           : isBankTransfer // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
+  }
+
+  /// Create a copy of BillModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $LodgingModelCopyWith<$Res>? get lodging {
+    if (_self.lodging == null) {
+      return null;
+    }
+
+    return $LodgingModelCopyWith<$Res>(_self.lodging!, (value) {
+      return _then(_self.copyWith(lodging: value));
+    });
   }
 }
 

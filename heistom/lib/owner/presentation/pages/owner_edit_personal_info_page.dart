@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/global_controller.dart';
+import 'dart:io';
 
 class OwnerEditPersonalInfoPage extends StatelessWidget {
   OwnerEditPersonalInfoPage({super.key});
@@ -21,9 +22,14 @@ class OwnerEditPersonalInfoPage extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 80,
-                      backgroundImage: NetworkImage(
-                          globalController.user.avatar ??
-                              ''), // Replace with actual image
+                      backgroundImage: (globalController.user.avatar != null &&
+                              globalController.user.avatar!.isNotEmpty)
+                          ? FileImage(File(globalController.user.avatar!))
+                          : null,
+                      child: (globalController.user.avatar == null ||
+                              globalController.user.avatar!.isEmpty)
+                          ? const Icon(Icons.person, size: 64)
+                          : null,
                     ),
                     Positioned(
                       bottom: 0,

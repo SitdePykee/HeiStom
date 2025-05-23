@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
+import 'dart:io';
 
 class LodgingReviewView extends StatelessWidget {
   final LodgingEntity lodging;
@@ -71,10 +72,10 @@ class LodgingReviewView extends StatelessWidget {
                     CircleAvatar(
                       radius: 24,
                       backgroundImage: review.reviewer?.avatar != null
-                          ? NetworkImage(review.reviewer!.avatar!)
+                          ? FileImage(File(review.reviewer!.avatar!))
                           : null,
                       child: review.reviewer?.avatar == null
-                          ? Icon(Icons.person, size: 32)
+                          ? const Icon(Icons.person, size: 32)
                           : null,
                     ),
                     SizedBox(width: 12),

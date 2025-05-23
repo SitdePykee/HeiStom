@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:heistom/common/global_controller.dart';
 import 'package:heistom/renter/presentation/pages/homepage.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 import '../../../lodging/presentation/widgets/lodging_list_item_w.dart';
 import '../controllers/owner_home_page_c.dart';
@@ -30,7 +31,11 @@ class OwnerHomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(globalController.user.avatar ?? ''),
+                  image: (globalController.user.avatar != null &&
+                          globalController.user.avatar!.isNotEmpty)
+                      ? FileImage(File(globalController.user.avatar!))
+                      : const AssetImage('assets/images/default_avatar.png')
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),

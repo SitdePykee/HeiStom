@@ -38,11 +38,13 @@ class LodgingDetailView extends StatelessWidget {
                     color: Colors.blue,
                     size: 24,
                   ),
-                  Text(
-                    '${lodging.address}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                  Expanded(
+                    child: Text(
+                      '${lodging.address}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ],
@@ -138,6 +140,7 @@ class LodgingDetailView extends StatelessWidget {
                     children: [
                       Text(
                         lodging.owner?.name ?? '',
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),

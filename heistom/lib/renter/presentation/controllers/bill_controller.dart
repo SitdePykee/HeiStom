@@ -3,7 +3,7 @@ import 'package:heistom/common/domain/entity/bill_entity.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
 import 'package:heistom/renter/data/bill_repository.dart';
 
-class BillController{
+class BillController {
   RxString paymentMethod = 'Chuyển khoản'.obs;
   RxBool isTransfer() {
     if (paymentMethod.value == 'Chuyển khoản') {
@@ -13,7 +13,8 @@ class BillController{
     }
   }
 
-  double calculateTotal(int checkin, int checkout, LodgingEntity lodging, int numOfRooms, int numOfPeople){
+  double calculateTotal(int checkin, int checkout, LodgingEntity lodging,
+      int numOfRooms, int numOfPeople) {
     final durationMs = checkout - checkin;
     double totalPrice = 0;
     if (durationMs >= 86400000) {
@@ -28,9 +29,5 @@ class BillController{
     return totalPrice;
   }
 
-
-
-
   var lodging = Rx<LodgingEntity?>(null);
-
 }
