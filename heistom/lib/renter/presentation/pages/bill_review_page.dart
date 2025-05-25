@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/bill_entity.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
 import 'package:heistom/common/global_controller.dart';
+import 'package:heistom/renter/data/review_repository.dart';
 import 'package:heistom/renter/presentation/controllers/bill_controller.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ class _BillDonePageState extends State<BillReviewPage> {
   final BillController billController = Get.find<BillController>();
   final SearchHouseController searchController =
       Get.find<SearchHouseController>();
+  final ReviewRepository reviewRepository = Get.find<ReviewRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +117,86 @@ class _BillDonePageState extends State<BillReviewPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Get.defaultDialog(
-                        title: 'Thông báo',
-                        middleText:
-                            'Vui lòng chờ quản lý liên hệ để duyệt đơn hủy phòng của bạn',
-                        confirmTextColor: Colors.white,
-                        onConfirm: () {
-                          Get.back(); // Đóng dialog
-                        },
+                      int selectedRating = 0;
+                      TextEditingController commentController =
+                          TextEditingController();
+
+                      Get.dialog(
+                        AlertDialog(
+                          title: const Text('Đánh giá phòng'),
+                          content: StatefulBuilder(
+                            builder: (context, setState) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(5, (index) {
+                                      return IconButton(
+                                        icon: Icon(
+                                          Icons.star,
+                                          color: index < selectedRating
+                                              ? Colors.amber
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedRating = index + 1;
+                                          });
+                                        },
+                                      );
+                                    }),
+                                  ),
+                                  TextField(
+                                    controller: commentController,
+                                    maxLines: 3,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Nhập nhận xét của bạn...',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                if (selectedRating == 0) {
+                                  Get.snackbar(
+                                    'Lỗi',
+                                    'Vui lòng chọn số sao trước khi đánh giá',
+                                    backgroundColor:
+                                        Colors.red.withOpacity(0.8),
+                                    colorText: Colors.white,
+                                  );
+                                  return;
+                                }
+
+                                reviewRepository.createReview(
+                                    lodging.id!,
+                                    selectedRating.toDouble(),
+                                    commentController.text);
+
+                                Get.back();
+                                Get.snackbar(
+                                  'Thành công',
+                                  'Cảm ơn bạn đã đánh giá!',
+                                  backgroundColor:
+                                      Colors.green.withOpacity(0.7),
+                                  colorText: Colors.white,
+                                );
+                              },
+                              child: const Text('Đánh giá'),
+                            ),
+                          ],
+                        ),
                       );
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                      backgroundColor: MaterialStateProperty.all(Colors.orange),
                     ),
-                    child: const Text('Hủy phòng',
+                    child: const Text('Trả phòng',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,

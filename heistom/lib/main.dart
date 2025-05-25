@@ -10,6 +10,7 @@ import 'package:heistom/owner/presentation/detail_owner_page.dart';
 import 'package:heistom/owner/presentation/pages/owner_create_homestay_page.dart';
 import 'package:heistom/owner/presentation/pages/owner_home_page.dart';
 import 'package:heistom/renter/data/bill_repository.dart';
+import 'package:heistom/renter/data/review_repository.dart';
 import 'package:heistom/renter/data/search_repository.dart';
 import 'package:heistom/renter/presentation/controllers/bill_controller.dart';
 import 'package:heistom/renter/presentation/controllers/search_controller.dart';
@@ -26,6 +27,7 @@ void main() {
   Get.put(GlobalController());
   Get.put<GlobalController>(GlobalController());
 
+  Get.put<ReviewRepository>(ReviewRepository());
   Get.put<SearchHouseController>(SearchHouseController());
   Get.put<SearchRepository>(SearchRepository());
   Get.put<BillController>(BillController());
