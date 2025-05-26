@@ -11,7 +11,7 @@ import '../model/room_status_model.dart';
 class OwnerLodgingRepository {
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://10.0.2.2:8080/',
+      baseUrl: 'http://localhost:8080/',
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 3),
     ),

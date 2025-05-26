@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../common/domain/entity/lodging_entity.dart';
@@ -22,8 +24,8 @@ class HouseCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  lodging.image?.first ?? '',
+                child: Image.file(
+                  File(lodging.image?.first ?? ''),
                   fit: BoxFit.cover,
                   width: 74,
                   height: 74,

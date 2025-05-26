@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
@@ -112,8 +114,8 @@ class _DetailLodgingPageState extends State<DetailLodgingPage> {
       body: Column(
         children: [
           widget.lodging.image != null && widget.lodging.image!.isNotEmpty
-              ? Image.asset(
-                  widget.lodging.image!.first,
+              ? Image.file(
+                  File(widget.lodging.image?.first ?? ''),
                   fit: BoxFit.cover,
                 )
               : const Placeholder(

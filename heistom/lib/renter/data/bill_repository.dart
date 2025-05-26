@@ -10,7 +10,7 @@ import 'package:heistom/renter/presentation/controllers/search_controller.dart';
 
 class BillRepository {
   final Dio dio = Dio();
-  final String baseUrl = 'http://10.0.2.2:8080/v1';
+  final String baseUrl = 'http://localhost:8080/v1';
   GlobalController globalController = Get.find<GlobalController>();
   BillController billController = Get.find<BillController>();
   final SearchHouseController searchController =

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
@@ -105,8 +107,8 @@ class OwnerBookingListPage extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
-                imageUrl, // Replace with actual image URL
+              child: Image.file(
+                File(imageUrl), // Replace with actual image URL
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,

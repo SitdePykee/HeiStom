@@ -9,6 +9,9 @@ class LodgingReviewView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double rating = lodging.rating ?? 0.0;
+    final reviews = lodging.reviews ?? [];
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -18,67 +21,53 @@ class LodgingReviewView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${lodging.rating ?? 0.0}',
-                style: TextStyle(
+                rating.toStringAsFixed(1),
+                style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Row(
                 children: [
-                  for (int i = 1; i <= lodging.rating!.floor(); i++)
-                    Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                      size: 24,
-                    ),
-                  if (lodging.rating! - lodging.rating!.floor() >= 0.5)
-                    Icon(
-                      Icons.star_half,
-                      color: Colors.amber,
-                      size: 24,
-                    ),
-                  for (int i = lodging.rating!.floor() +
-                          (lodging.rating! - lodging.rating!.floor() >= 0.5
-                              ? 1
-                              : 0);
+                  for (int i = 1; i <= rating.floor(); i++)
+                    const Icon(Icons.star, color: Colors.amber, size: 24),
+                  if (rating - rating.floor() >= 0.5)
+                    const Icon(Icons.star_half, color: Colors.amber, size: 24),
+                  for (int i = rating.floor() + (rating - rating.floor() >= 0.5 ? 1 : 0);
                       i < 5;
                       i++)
-                    Icon(
-                      Icons.star,
-                      color: Colors.grey,
-                      size: 24,
-                    ),
+                    const Icon(Icons.star, color: Colors.grey, size: 24),
                 ],
               )
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Expanded(
             child: ListView.separated(
-              itemCount: lodging.reviews?.length ?? 0,
+              itemCount: reviews.length,
               separatorBuilder: (context, index) => Divider(
                 height: 16,
                 thickness: 1,
                 color: Colors.grey[300],
               ),
               itemBuilder: (context, index) {
-                var review = lodging.reviews![index];
+                final review = reviews[index];
+                final reviewer = review.reviewer;
+                final avatarPath = reviewer?.avatar;
+
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundImage: review.reviewer?.avatar != null
-                          ? FileImage(File(review.reviewer!.avatar!))
-                          : null,
-                      child: review.reviewer?.avatar == null
+                      backgroundImage: avatarPath != null ? FileImage(File(avatarPath)) : null,
+                      child: avatarPath == null
                           ? const Icon(Icons.person, size: 32)
                           : null,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +76,8 @@ class LodgingReviewView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                review.reviewer?.name ?? 'Anonymous',
-                                style: TextStyle(
+                                reviewer?.name ?? 'Anonymous',
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -96,15 +85,17 @@ class LodgingReviewView extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    '${review.rating?.toStringAsFixed(1) ?? 'N/A'}',
-                                    style: TextStyle(
+                                    review.rating != null
+                                        ? review.rating!.toStringAsFixed(1)
+                                        : 'N/A',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.amber,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(width: 4),
-                                  Icon(
+                                  const SizedBox(width: 4),
+                                  const Icon(
                                     Icons.star,
                                     color: Colors.amber,
                                     size: 16,
@@ -113,18 +104,18 @@ class LodgingReviewView extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             _formatTimeAgo(review.postAt),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             review.comment ?? 'Không có bình luận',
-                            style: TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ],
                       ),

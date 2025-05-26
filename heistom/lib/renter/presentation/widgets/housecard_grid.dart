@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
@@ -39,8 +41,8 @@ class HouseCardGrid extends StatelessWidget {
                       topLeft: Radius.circular(12),
                       topRight: Radius.circular(12),
                     ),
-                    child: Image.asset(
-                      lodging.image?.first ?? '',
+                    child: Image.file(
+                      File(lodging.image?.first ?? ''),
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/domain/entity/user_entity.dart';
@@ -37,7 +39,7 @@ class _DetailOwnerPageState extends State<DetailOwnerPage>
           const SizedBox(height: 8),
           CircleAvatar(
             radius: 32,
-            backgroundImage: Image.asset(widget.owner.avatar ?? '').image,
+            backgroundImage: Image.file(File(widget.owner.avatar ?? '')).image,
           ),
           const SizedBox(height: 8),
           Text(

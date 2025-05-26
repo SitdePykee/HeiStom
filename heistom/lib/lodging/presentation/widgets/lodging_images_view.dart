@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/lodging_entity.dart';
 
@@ -30,8 +32,8 @@ class LodgingImagesView extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        image,
+                      child: Image.file(
+                        File(image),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:heistom/common/domain/entity/bill_entity.dart';
 import 'package:get/get.dart';
@@ -31,8 +33,8 @@ class BookedHousecardTile extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(12)),
             child: (lodging?.image != null && lodging!.image!.isNotEmpty)
-                ? Image.asset(
-                    lodging.image!.first,
+                ? Image.file(
+                    File(lodging.image?.first ?? ''),
                     width: 87,
                     height: 87,
                     fit: BoxFit.cover,

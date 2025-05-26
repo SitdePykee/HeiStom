@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     onSelected: (lodging) {
-                      controller.searchController.text = lodging.name ?? '';
+                      controller.searchController.text = lodging.address ?? '';
                     },
                   ),
                 ),

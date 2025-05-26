@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -130,7 +131,7 @@ class LodgingDetailView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage:
-                        Image.asset(lodging.owner?.avatar ?? '').image,
+                        Image.file(File(lodging.owner?.avatar ?? '')).image,
                   ),
                   const SizedBox(
                     width: 8,

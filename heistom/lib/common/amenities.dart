@@ -22,7 +22,7 @@ enum Amenities {
 
 extension AmenitiesX on Amenities {
   String get displayName => switch (this) {
-        Amenities.free_wifi => 'Miễn phí',
+        Amenities.free_wifi => 'Wifi Miễn phí',
         Amenities.bike_to_airport => 'Xe đưa đón sân bay',
         Amenities.gym => 'Phòng gym',
         Amenities.free_breakfast => 'Bữa sáng miễn phí',
