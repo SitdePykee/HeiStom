@@ -195,44 +195,70 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: _pickImage,
-                  child: Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey[300]!)),
-                    child: _imageFiles.isNotEmpty
-                        ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _imageFiles.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.file(_imageFiles[index],
-                                    fit: BoxFit.cover, width: 150),
-                              );
-                            },
-                          )
-                        : Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey[300]!)),
+                      child: _imageFiles.isNotEmpty
+                          ? Stack(
+                              alignment: Alignment.bottomCenter,
                               children: [
-                                Icon(Icons.cloud_upload_outlined,
-                                    size: 50, color: Colors.grey[600]),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Tải hình ảnh lên',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue[700],
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
+                                PageView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _imageFiles.length,
+                                  itemBuilder: (context, index) {
+                                    return Image.file(
+                                      _imageFiles[index],
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      _imageFiles.length,
+                                      (index) => Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        width: 8,
+                                        height: 8,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
+                            )
+                          : Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.cloud_upload_outlined,
+                                      size: 50, color: Colors.grey[600]),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Tải hình ảnh lên',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blue[700],
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -266,23 +292,6 @@ class _OwnerCreateHomestayPageState extends State<OwnerCreateHomestayPage> {
           ),
         ),
       ),
-      // The bottom navigation bar is usually part of a higher-level Scaffold (e.g., in main.dart or a home page).
-      // If this page is meant to be a standalone screen with its own nav bar, it can be added here.
-      // For now, I'm focusing on the form content. Example:
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.add_box_rounded), label: 'Add'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-      //   ],
-      //   currentIndex: 1, // Assuming 'Add' is the active tab
-      //   selectedItemColor: Colors.blue,
-      //   unselectedItemColor: Colors.grey,
-      //   showUnselectedLabels: false,
-      //   type: BottomNavigationBarType.fixed,
-      // ),
     );
   }
 

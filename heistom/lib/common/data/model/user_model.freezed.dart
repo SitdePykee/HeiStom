@@ -19,6 +19,7 @@ mixin _$UserModel {
   String? get name;
   String? get email;
   String? get phoneNumber;
+  String? get phoneNumber;
   String? get avatar;
   String? get address;
   String? get type;
@@ -41,6 +42,8 @@ mixin _$UserModel {
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
@@ -69,6 +72,7 @@ abstract mixin class $UserModelCopyWith<$Res> {
       String? name,
       String? email,
       String? phoneNumber,
+      String? phoneNumber,
       String? avatar,
       String? address,
       String? type});
@@ -90,6 +94,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? name = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
+    Object? phoneNumber = freezed,
     Object? avatar = freezed,
     Object? address = freezed,
     Object? type = freezed,
@@ -107,6 +112,9 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _self.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
       phoneNumber: freezed == phoneNumber
           ? _self.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -136,6 +144,7 @@ class _UserModel implements UserModel {
       this.name,
       this.email,
       this.phoneNumber,
+      this.phoneNumber,
       this.avatar,
       this.address,
       this.type});
@@ -149,6 +158,7 @@ class _UserModel implements UserModel {
   @override
   final String? email;
   @override
+  final String? phoneNumber;
   final String? phoneNumber;
   @override
   final String? avatar;
@@ -182,6 +192,8 @@ class _UserModel implements UserModel {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.type, type) || other.type == type));
@@ -211,6 +223,7 @@ abstract mixin class _$UserModelCopyWith<$Res>
       String? name,
       String? email,
       String? phoneNumber,
+      String? phoneNumber,
       String? avatar,
       String? address,
       String? type});
@@ -232,6 +245,7 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? name = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
+    Object? phoneNumber = freezed,
     Object? avatar = freezed,
     Object? address = freezed,
     Object? type = freezed,
@@ -249,6 +263,9 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _self.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
       phoneNumber: freezed == phoneNumber
           ? _self.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable

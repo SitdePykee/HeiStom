@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:heistom/common/data/model/lodging_model.dart';
 
+import '../../../common/data/model/user_model.dart';
 import '../../../common/domain/entity/lodging_entity.dart';
+import '../../../common/global_controller.dart';
 import '../model/lodging_booking_detail_model.dart';
 import '../model/lodging_booking_model.dart';
 import '../model/room_status_model.dart';
@@ -94,5 +97,17 @@ class OwnerLodgingRepository {
     print(jsonEncode(data));
     final response = await dio.post('v1/lodging', data: data);
     return response.data['data'];
+  }
+
+  Future<UserModel> updateUser(Map<String, dynamic> data) async {
+    final userId = Get.find<GlobalController>().user.id;
+    final response = await dio.put(
+      'v1/user/update',
+      queryParameters: {
+        'userId': userId,
+      },
+      data: data,
+    );
+    return UserModel.fromJson(response.data['data']);
   }
 }

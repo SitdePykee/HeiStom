@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:heistom/common/global_controller.dart';
+import 'package:heistom/owner/presentation/pages/owner_notification_page.dart';
 import 'package:heistom/renter/presentation/pages/homepage.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -24,44 +25,51 @@ class OwnerHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xffF7F7F7),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: (globalController.user.avatar != null &&
-                          globalController.user.avatar!.isNotEmpty)
-                      ? FileImage(File(globalController.user.avatar!))
-                      : const AssetImage('assets/images/default_avatar.png')
-                          as ImageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+            Row(
               children: [
-                const Text(
-                  'Chào buổi sáng',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black87,
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: NetworkImage(globalController.user.avatar ?? ''),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                Text(
-                  globalController.user.name!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Chào buổi sáng',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Text(
+                      globalController.user.name!,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ],
+            ),
+            IconButton(
+              onPressed: () {
+                Get.to(() => OwnerNotificationPage());
+              },
+              icon: const Icon(Icons.notifications_outlined),
             ),
           ],
         ),
